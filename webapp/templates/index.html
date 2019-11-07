@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
+            integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script src="/static/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+
+<!--suppress HtmlUnknownTarget -->
+{% if error %}
+<div class="error">{{ message }}</div>
+{% endif %}
+
+<div class="error socket-error"></div>
+
+{% if not loggedIn %}
+<a href="login">Login to Spotify</a>
+{% endif %}
+
+{% if loggedIn %}
+<div class="content-wrapper">
+
+    <div class="playlist-wrapper">
+        <h1 class="playlist-heading">Your Playlists</h1>
+        <p class="description-text">Choose a playlist to sort!</p>
+        <ul class="playlist-list">
+            {% for item in playlists %}
+            <li class="playlist" data-playlist-id="{{item.id}}">{{item.name}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="track-wrapper">
+        <h1 class="track-heading"></h1>
+        <p class="description-text">Select a title your playlist should start with!</p>
+        <ol class="track-list"></ol>
+    </div>
+</div>
+{% endif %}
+
+
+</body>
+</html>
