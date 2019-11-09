@@ -29,3 +29,9 @@ class Playlist:
 
     def get_track_names(self):
         return [t.get_name() for t in self._tracks]
+
+    def get_track_by_id(self, id):
+        for track in self._tracks:
+            if track.id == id:
+                return track
+        return None
