@@ -24,14 +24,17 @@ class Playlist:
     def get_tracks(self):
         return self._tracks
 
+    def set_tracks(self, tracks):
+        self._tracks = tracks
+
     def return_track_ids(self):
         return [t.get_id() for t in self._tracks]
 
     def get_track_names(self):
         return [t.get_name() for t in self._tracks]
 
-    def get_track_by_id(self, id):
+    def find_track_by_id(self, id):
         for track in self._tracks:
-            if track.id == id:
+            if track.get_id() == id:
                 return track
         return None

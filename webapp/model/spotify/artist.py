@@ -1,5 +1,9 @@
 class Artist:
 
+    @staticmethod
+    def parse_json(json):
+        return [Artist(a['id'], a['name'], a['name']) for a in json]
+
     def __init__(self, id, name, href):
         self._id = id
         self._name = name
@@ -13,3 +17,10 @@ class Artist:
 
     def get_href(self):
         return self._href
+
+    def to_dict(self):
+        return {
+            'id': self.get_id(),
+            'name': self.get_name(),
+            'href': self.get_href()
+        }

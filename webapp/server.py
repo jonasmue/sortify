@@ -4,6 +4,8 @@ from urllib.parse import urlencode
 from flask import Flask, request, render_template, redirect
 from flask_socketio import SocketIO, emit
 
+from model.spotify.playlist import Playlist
+from model.spotify.track import Track
 from util.request import *
 
 app = Flask(__name__)
@@ -78,32 +80,23 @@ def test_disconnect():
 @socketio.on('playlistSelected')
 @require_api_token
 def retrieve_playlist(data):
-    playlist_id = data['playlist_id']
-    session[SELECTED_PLAYLIST] = playlist_id
-    session[PLAYLIST_OFFSET] = 100
-    load_tracks(playlist_id)
-
-
-@socketio.on('loadMoreTracks')
-@require_api_token
-def load_more_tracks():
-    if SELECTED_PLAYLIST not in session:
+    playlist = Playlist(data['id'], data['name'], data['href'], None)
+    session[PLAYLIST_OFFSET] = 0
+    tracks = load_tracks(playlist.get_id())
+    if tracks is None:
         return
-    if session[PLAYLIST_FULLY_LOADED]:
-        return
-    offset = session[PLAYLIST_OFFSET]
-    session[PLAYLIST_OFFSET] += 100
-    playlist_id = session[SELECTED_PLAYLIST]
-    load_tracks(playlist_id, offset)
+    playlist.set_tracks(tracks)
+    session[SELECTED_PLAYLIST] = playlist
+    emit('playlistTracks', [t.to_dict() for t in tracks])
 
 
 @socketio.on('trackSelected')
 @require_api_token
 def sort_playlist(data):
-    track_id = data['track_id']
-    track_name = data['track_name']
-    track_artist = data['track_artist']
-    print(track_id, track_name, track_artist)
+    track = session[SELECTED_PLAYLIST].find_track_by_id(data['track_id'])
+    if track is None:
+        socket_error('Could not find the selected track')
+        return
 
 
 ###########################################
@@ -114,24 +107,34 @@ def sort_playlist(data):
 def get_playlists():
     me_json = get('https://api.spotify.com/v1/me')
     if me_json is None:
-        return send_error_response("Could not retrieve user data")
+        return send_error_response('Could not retrieve user data')
     user_id = me_json['id']
     playlist_json = get('https://api.spotify.com/v1/users/' + user_id + '/playlists')
     if me_json is None:
-        return send_error_response("Could not retrieve playlists")
+        return send_error_response('Could not retrieve playlists')
 
-    playlists = [{'name': pl['name'], 'id': pl['id']} for pl in playlist_json['items']]
+    playlists = [{'name': pl['name'], 'id': pl['id'], 'href': pl['href']} for pl in playlist_json['items']]
     return render_template('index.html', playlists=playlists, loggedIn=True)
 
 
-def load_tracks(playlist_id, offset=None):
-    track_json = get('https://api.spotify.com/v1/playlists/' + playlist_id + '/tracks', payload={'offset': offset})
-    if track_json is None:
-        socket_error("Could not retrieve tracks")
-        return
-    tracks = track_json['items']
-    session[PLAYLIST_FULLY_LOADED] = len(tracks) < 100
-    emit('playlistTracks', tracks)
+@require_api_token
+def load_tracks(playlist_id):
+    tracks = []
+    while True:
+        track_json = get('https://api.spotify.com/v1/playlists/' + playlist_id + '/tracks',
+                         payload={'offset': session[PLAYLIST_OFFSET]})
+        if track_json is None:
+            socket_error('Could not retrieve tracks')
+            return
+        items = track_json['items']
+        tracks.extend(Track.parse_json(items))
+        session[PLAYLIST_OFFSET] += len(items)
+        if session[PLAYLIST_OFFSET] > MAX_PLAYLIST_LENGTH:
+            socket_error('Playlist too long')
+            return None
+        if len(items) < 100:
+            break
+    return tracks
 
 
 def socket_error(message=''):

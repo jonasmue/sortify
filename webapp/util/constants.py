@@ -10,5 +10,6 @@ STATE_KEY = 'spotify_auth_state'
 API_SESSION_TOKEN = 'api_session_token'
 
 SELECTED_PLAYLIST = 'selected_playlist'
-PLAYLIST_FULLY_LOADED = 'playlist_fully_loaded'
 PLAYLIST_OFFSET = 'playlist_offset'
+
+MAX_PLAYLIST_LENGTH = 1000

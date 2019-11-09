@@ -4,17 +4,17 @@ $(document).ready(function () {
 
     // Emitting events
 
-    $(window).scroll(function () {
-        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-            socket.emit('loadMoreTracks')
-        }
-    });
-
     $('li.playlist').click(function () {
         const playlistId = $(this).attr("data-playlist-id");
-        socket.emit('playlistSelected', {playlist_id: playlistId});
+        const playlistName = $(this).attr("data-playlist-name");
+        const playlistHref = $(this).attr("data-playlist-href");
+        socket.emit('playlistSelected', {
+            id: playlistId,
+            name: playlistName,
+            href: playlistHref
+        });
         $('.playlist-wrapper').hide('fast');
-        $('.track-heading').html($(this).html());
+        $('.track-heading').html(playlistName);
     });
 
     function registerTrackClick() {
@@ -38,7 +38,7 @@ $(document).ready(function () {
     socket.on('playlistTracks', function (tracks) {
         const trackList = $('.track-list');
         for (let i in tracks) {
-            const track = tracks[i].track;
+            const track = tracks[i];
             trackList.append('<li class="track" ' +
                 ' data-track-id="' + track.id + '"' +
                 ' data-track-name="' + track.name + '"' +

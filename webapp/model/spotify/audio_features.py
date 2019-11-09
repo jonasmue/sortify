@@ -35,5 +35,21 @@ class AudioFeatureVector:
     def get_speechiness(self):
         return self._speechiness
 
+    def get_valence(self):
+        return self._valence
+
     def get_tempo(self):
         return min(1, self._tempo / AudioFeatureVector.MAX_TEMPO)  # Normalize tempo
+
+    def to_dict(self):
+        return {
+            'acousticness': self.get_acousticness(),
+            'danceability': self.get_danceability(),
+            'energy': self.get_energy(),
+            'instrumentalness': self.get_instrumentalness(),
+            'liveness': self.get_liveness(),
+            'loudness': self.get_loudness(),
+            'speechiness': self.get_speechiness(),
+            'valence': self.get_valence(),
+            'tempo': self.get_tempo()
+        }

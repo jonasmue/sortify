@@ -31,7 +31,9 @@
         <p class="description-text">Choose a playlist to sort!</p>
         <ul class="playlist-list">
             {% for item in playlists %}
-            <li class="playlist" data-playlist-id="{{item.id}}">{{item.name}}</li>
+            <li class="playlist" data-playlist-id="{{item.id}}" data-playlist-name="{{item.name}}"
+                data-playlist-href="{{item.href}}">{{item.name}}
+            </li>
             {% endfor %}
         </ul>
     </div>
