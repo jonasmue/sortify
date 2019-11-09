@@ -23,3 +23,9 @@ class Playlist:
 
     def get_tracks(self):
         return self._tracks
+
+    def return_track_ids(self):
+        return [t.get_id() for t in self._tracks]
+
+    def get_track_names(self):
+        return [t.get_name() for t in self._tracks]
