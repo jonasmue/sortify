@@ -60,6 +60,14 @@ $(document).ready(function () {
         socketError.html(message);
         socketError.show();
     });
+
+    // jQuery functions
+
+    $('.back-button').click(function() {
+        $('.track-wrapper').hide();
+        $('.playlist-wrapper').show();
+    });
+
 });
 
 
