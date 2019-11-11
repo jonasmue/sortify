@@ -17,39 +17,15 @@ $(document).ready(function () {
         $('.track-heading').html(playlistName);
     });
 
-    function registerTrackEvents() {
-        let trackItem = $('li.track');
-        registerTrackClick(trackItem, socket);
-        registerTrackMouseOver(trackItem);
-        registerTrackMouseOut(trackItem);
-    }
-
 
     // Receiving events
 
     socket.on('playlistTracks', function (tracks) {
-        const trackList = $('.track-list');
-        for (let i in tracks) {
-            const track = tracks[i];
-            trackList.append('<li class="track" ' +
-                ' data-track-id="' + track.id + '"' +
-                ' data-track-name="' + track.name + '"' +
-                ' data-track-preview-url="' + track.preview_url + '"' +
-                ' data-track-artist="' + track.artists.map(function (a) {
-                    return a.name;
-                }).join(",") + '"' +
-                '>' +
-                '<span class="track-name">' +
-                track.name +
-                '</span> &mdash; ' +
-                '<span class="track-artist">' +
-                track.artists.map(function (a) {
-                    return a.name;
-                }).join(" & ") +
-                '</span></li>');
-        }
-        registerTrackEvents();
-        $('.track-wrapper').show('fast');
+        appendTracks(tracks, socket);
+    });
+
+    socket.on('sortedPlaylist', function (playlist) {
+        appendTracks(playlist.tracks, socket)
     });
 
     socket.on('error', function (message) {
@@ -69,10 +45,20 @@ $(document).ready(function () {
 });
 
 // TODO: MODULARIZE
+
+function registerTrackEvents(socket) {
+    let trackItem = $('li.track');
+    registerTrackClick(trackItem, socket);
+    registerTrackMouseOver(trackItem);
+    registerTrackMouseOut(trackItem);
+}
+
 function registerTrackClick(trackItem, socket) {
     trackItem.off("click");
     trackItem.click(function () {
         const trackId = $(this).attr("data-track-id");
+        $('.track-list').empty();
+        $('audio').remove();
         socket.emit('trackSelected', {
             track_id: trackId,
         });
@@ -102,6 +88,31 @@ function registerTrackMouseOut(trackItem) {
         $('#' + $(this).attr('data-track-id')).remove();
     });
 
+}
+
+function appendTracks(tracks, socket) {
+    const trackList = $('.track-list');
+    for (let i in tracks) {
+        const track = tracks[i];
+        trackList.append('<li class="track" ' +
+            ' data-track-id="' + track.id + '"' +
+            ' data-track-name="' + track.name + '"' +
+            ' data-track-preview-url="' + track.preview_url + '"' +
+            ' data-track-artist="' + track.artists.map(function (a) {
+                return a.name;
+            }).join(",") + '"' +
+            '>' +
+            '<span class="track-name">' +
+            track.name +
+            '</span> &mdash; ' +
+            '<span class="track-artist">' +
+            track.artists.map(function (a) {
+                return a.name;
+            }).join(" & ") +
+            '</span></li>');
+    }
+    registerTrackEvents(socket);
+    $('.track-wrapper').show('fast');
 }
 
 

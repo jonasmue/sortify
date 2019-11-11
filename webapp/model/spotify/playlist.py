@@ -57,7 +57,7 @@ class Playlist:
         }
 
     def audio_feature_matrix(self):
-        matrix = np.array((len(self.get_tracks()), AudioFeatureVector.N_FEATURES))
+        matrix = np.zeros((len(self.get_tracks()), AudioFeatureVector.N_FEATURES))
         for i, track in enumerate(self.get_tracks()):
             if 'audio_features' not in track.to_dict().keys():
                 return None

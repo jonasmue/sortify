@@ -24,12 +24,13 @@ class GloveSorter(Model):
     def sort_playlist(self, playlist, selected_track):
         if not self.initialized:
             return None
-        self.audio_feature_matrix = playlist.audio_feature_matrix()
-        if self.audio_feature_matrix is None:
-            return None
 
         first_track, remaining_tracks = self.assign_indices(selected_track, playlist)
         if first_track is None:
+            return None
+
+        self.audio_feature_matrix = playlist.audio_feature_matrix()
+        if self.audio_feature_matrix is None:
             return None
 
         return Playlist(None, playlist.get_name() + ' [sortified]', None,
@@ -58,13 +59,17 @@ class GloveSorter(Model):
         raw_result = []
 
         # We know the first track -> sort all known tracks after it
-        known_sorted_idcs = self.sort_track_ids(first_track[1], known_2_track.keys(), self.weights)
-        known_sorted_tracks = [known_2_track[idx] for idx in known_sorted_idcs]
+        known_sorted_idcs = self.sort_track_ids(first_track[1], list(known_2_track.keys()), self.weights)
+        known_sorted_tracks = [first_track]
+        known_sorted_tracks.extend([known_2_track[idx] for idx in known_sorted_idcs[1:]])  # First track already covered
         raw_result.extend(known_sorted_tracks)
+
+        if not len(unknown_audio_feature_2_track):
+            return raw_result
 
         # Then sort the unknown tracks based on their audio features
         last_known_track = raw_result[-1]
-        unknown_sorted_idcs = self.sort_track_ids(last_known_track[2], unknown_audio_feature_2_track.keys(),
+        unknown_sorted_idcs = self.sort_track_ids(last_known_track[2], list(unknown_audio_feature_2_track.keys()),
                                                   self.audio_feature_matrix)[1:]  # First track already covered
         unknown_sorted_tracks = [unknown_audio_feature_2_track[idx] for idx in unknown_sorted_idcs]
         raw_result.extend(unknown_sorted_tracks)
@@ -75,18 +80,23 @@ class GloveSorter(Model):
         raw_result = []
 
         # We do not know first track -> sort all unknown tracks after it based on their audio features
-        unknown_sorted_idcs = self.sort_track_ids(first_track[2], unknown_audio_feature_2_track.keys(),
+        unknown_sorted_idcs = self.sort_track_ids(first_track[2], list(unknown_audio_feature_2_track.keys()),
                                                   self.audio_feature_matrix)
-        unknown_sorted_tracks = [unknown_audio_feature_2_track[idx] for idx in unknown_sorted_idcs]
+        unknown_sorted_tracks = [first_track]
+        unknown_sorted_tracks.extend(
+            [unknown_audio_feature_2_track[idx] for idx in unknown_sorted_idcs[1:]])  # First track already covered
         raw_result.extend(unknown_sorted_tracks)
         last_unknown_track = raw_result[-1]
+
+        if not len(known_2_track):
+            return raw_result
 
         # Then find most similar known track based on audio features
         known_audio_feature_indices = sorted(
             list(known_audio_feature_2_track.keys()))  # sort list to later index it
         known_audio_features = self.audio_feature_matrix[known_audio_feature_indices]
         most_similar_known_track_idx = known_audio_feature_indices[
-            find_most_similar(last_unknown_track[2], known_audio_features)]
+            find_most_similar(last_unknown_track[2], known_audio_features)[0][0]]
         most_similar_known_track = known_audio_feature_2_track[most_similar_known_track_idx]
 
         # Then sort all known tracks after it using known features

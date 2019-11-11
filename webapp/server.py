@@ -105,6 +105,8 @@ def sort_playlist(data):
         socket_error('Model is not initialized yet')
         return
     sorted_playlist = model.sort_playlist(session[SELECTED_PLAYLIST], track)
+    if sorted_playlist is None:
+        socket_error('Playlist could not be sorted')
     emit('sortedPlaylist', sorted_playlist.to_dict())
 
 

@@ -15,14 +15,17 @@ class Track:
             artists = Artist.parse_json(track['artists'])
             href = track['href']
             preview_url = track['preview_url']
+            if id is None:
+                continue  # Skip unknown added tracks
             tracks.append(Track(id, name, artists, href, preview_url))
         return tracks
 
-    def __init__(self, id, name, artists, href, preview_url):
+    def __init__(self, id, name, artists, href, uri, preview_url):
         self._id = id
         self._name = name
         self._artists = artists
         self._href = href
+        self._uri = uri
         self._preview_url = preview_url
 
     def __eq__(self, other):
@@ -41,6 +44,9 @@ class Track:
 
     def get_href(self):
         return self._href
+
+    def get_uri(self):
+        return self._uri
 
     def get_preview_url(self):
         return self._preview_url
