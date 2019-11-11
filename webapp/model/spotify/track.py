@@ -14,10 +14,11 @@ class Track:
             name = track['name']
             artists = Artist.parse_json(track['artists'])
             href = track['href']
+            uri = track['uri']
             preview_url = track['preview_url']
             if id is None:
                 continue  # Skip unknown added tracks
-            tracks.append(Track(id, name, artists, href, preview_url))
+            tracks.append(Track(id, name, artists, href, uri, preview_url))
         return tracks
 
     def __init__(self, id, name, artists, href, uri, preview_url):
