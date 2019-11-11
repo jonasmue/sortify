@@ -9,6 +9,11 @@ class Artist:
         self._name = name
         self._href = href
 
+    def __eq__(self, other):
+        if not isinstance(other, Artist):
+            return False
+        return self.get_id() == other.get_id()
+
     def get_id(self):
         return self._id
 

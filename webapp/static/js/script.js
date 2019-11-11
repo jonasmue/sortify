@@ -17,19 +17,11 @@ $(document).ready(function () {
         $('.track-heading').html(playlistName);
     });
 
-    function registerTrackClick() {
+    function registerTrackEvents() {
         let trackItem = $('li.track');
-        trackItem.off("click");
-        trackItem.click(function () {
-            const trackId = $(this).attr("data-track-id");
-            const name = $(this).attr("data-track-name");
-            const artist = $(this).attr("data-track-artist");
-            socket.emit('trackSelected', {
-                track_id: trackId,
-                track_name: name,
-                track_artist: artist
-            });
-        });
+        registerTrackClick(trackItem, socket);
+        registerTrackMouseOver(trackItem);
+        registerTrackMouseOut(trackItem);
     }
 
 
@@ -42,16 +34,21 @@ $(document).ready(function () {
             trackList.append('<li class="track" ' +
                 ' data-track-id="' + track.id + '"' +
                 ' data-track-name="' + track.name + '"' +
-                ' data-track-artist="' + track.artists[0].name + '"' +
+                ' data-track-preview-url="' + track.preview_url + '"' +
+                ' data-track-artist="' + track.artists.map(function (a) {
+                    return a.name;
+                }).join(",") + '"' +
                 '>' +
                 '<span class="track-name">' +
                 track.name +
                 '</span> &mdash; ' +
                 '<span class="track-artist">' +
-                track.artists[0].name +
+                track.artists.map(function (a) {
+                    return a.name;
+                }).join(" & ") +
                 '</span></li>');
         }
-        registerTrackClick();
+        registerTrackEvents();
         $('.track-wrapper').show('fast');
     });
 
@@ -63,12 +60,49 @@ $(document).ready(function () {
 
     // jQuery functions
 
-    $('.back-button').click(function() {
+    $('.back-button').click(function () {
         $('.track-wrapper').hide();
+        $('.track-list').empty();
         $('.playlist-wrapper').show();
     });
 
 });
+
+// TODO: MODULARIZE
+function registerTrackClick(trackItem, socket) {
+    trackItem.off("click");
+    trackItem.click(function () {
+        const trackId = $(this).attr("data-track-id");
+        socket.emit('trackSelected', {
+            track_id: trackId,
+        });
+    });
+}
+
+function registerTrackMouseOver(trackItem) {
+    trackItem.off('mouseover');
+    trackItem.mouseover(function () {
+        previewUrl = $(this).attr('data-track-preview-url');
+        if (previewUrl !== 'null') {
+            const audio = $("<audio id='" + $(this).attr('data-track-id') + "'></audio>")
+                .attr({
+                    'src': previewUrl + '.mp3',
+                    'autoplay': 'autoplay',
+                    'loop': 'true'
+                }).appendTo("body");
+            audio[0].volume = 0;
+            audio.animate({volume: 1}, 1000);
+        }
+    });
+}
+
+function registerTrackMouseOut(trackItem) {
+    trackItem.off('mouseout');
+    trackItem.mouseout(function () {
+        $('#' + $(this).attr('data-track-id')).remove();
+    });
+
+}
 
 
 

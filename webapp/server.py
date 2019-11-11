@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 from flask import Flask, request, render_template, redirect
 from flask_socketio import SocketIO, emit
 
+from model.vector.glove_sorter import GloveSorter
 from model.spotify.playlist import Playlist
 from model.spotify.track import Track
 from util.request import *
@@ -11,6 +12,9 @@ from util.request import *
 app = Flask(__name__)
 app.config['SECRET_KEY'] = generate_random_string(32)
 socketio = SocketIO(app)
+
+model = GloveSorter(MODEL_URL, TRACK_MAP_URL)
+model.initialize()
 
 
 ###########################################
@@ -97,6 +101,11 @@ def sort_playlist(data):
     if track is None:
         socket_error('Could not find the selected track')
         return
+    if not model.initialized:
+        socket_error('Model is not initialized yet')
+        return
+    sorted_playlist = model.sort_playlist(session[SELECTED_PLAYLIST], track)
+    emit('sortedPlaylist', sorted_playlist.to_dict())
 
 
 ###########################################

@@ -6,6 +6,11 @@ body {
     display: none;
 }
 
+.track {
+    padding: 20px 0;
+    border-bottom: 1px solid limegreen;
+}
+
 .error {
     color: red;
 }

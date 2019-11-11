@@ -1,5 +1,5 @@
 import requests
-from util.util import *
+from util.api import *
 
 
 def get(url, payload=None):

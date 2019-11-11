@@ -1,3 +1,7 @@
+import numpy as np
+from model.spotify.audio_features import AudioFeatureVector
+
+
 class Playlist:
 
     def __init__(self, id, name, href, tracks):
@@ -5,6 +9,11 @@ class Playlist:
         self._name = name
         self._href = href
         self._tracks = tracks
+
+    def __eq__(self, other):
+        if not isinstance(other, Playlist):
+            return False
+        return self.get_id() == other.get_id()
 
     def get_id(self):
         return self._id
@@ -38,3 +47,19 @@ class Playlist:
             if track.get_id() == id:
                 return track
         return None
+
+    def to_dict(self):
+        return {
+            'id': self.get_id(),
+            'name': self.get_name(),
+            'href': self.get_href(),
+            'tracks': [t.to_dict() for t in self.get_tracks()]
+        }
+
+    def audio_feature_matrix(self):
+        matrix = np.array((len(self.get_tracks()), AudioFeatureVector.N_FEATURES))
+        for i, track in enumerate(self.get_tracks()):
+            if 'audio_features' not in track.to_dict().keys():
+                return None
+            matrix[i] = track.get_audio_features().to_vec()
+        return matrix

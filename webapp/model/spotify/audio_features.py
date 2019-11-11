@@ -1,5 +1,9 @@
+import numpy as np
+
+
 class AudioFeatureVector:
     MAX_TEMPO = 230.0
+    N_FEATURES = 9
 
     def __init__(self, acousticness, danceability, energy,
                  instrumentalness, liveness, loudness,
@@ -53,3 +57,14 @@ class AudioFeatureVector:
             'valence': self.get_valence(),
             'tempo': self.get_tempo()
         }
+
+    def to_vec(self):
+        return np.array([self.get_acousticness(),
+                         self.get_danceability(),
+                         self.get_energy(),
+                         self.get_instrumentalness(),
+                         self.get_liveness(),
+                         self.get_loudness(),
+                         self.get_speechiness(),
+                         self.get_valence(),
+                         self.get_tempo()])
