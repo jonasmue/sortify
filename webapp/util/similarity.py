@@ -1,4 +1,7 @@
+import os
 import numpy as np
+from sklearn.manifold import TSNE
+from matplotlib import pyplot as plt
 
 
 def cosine_matrix(matrix, vec):
@@ -33,3 +36,14 @@ def find_closest_index(this_index, other_indices, weights):
     other_vectors = weights[other_indices]
     distances = 1 - cosine_matrix(other_vectors, this_vector)
     return distances.argmin()
+
+
+def save_tsne_plot(vectors, labels, name):
+    tsne_result = TSNE().fit_transform(vectors)
+    x = tsne_result[:, 0]
+    y = tsne_result[:, 1]
+    fig, ax = plt.subplots(figsize=(15, 15))
+    ax.scatter(x, y)
+    for i, txt in enumerate(labels):
+        ax.annotate(txt, (x[i], y[i]))
+    plt.savefig(os.path.join('fig', name + '.pdf'))

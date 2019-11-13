@@ -18,13 +18,13 @@ def get(url, payload=None):
     return r.json()
 
 
-def post(url, headers, payload):
+def post(url, headers, payload, json=None):
     try:
-        r = requests.post(url, headers=headers, data=payload)
+        r = requests.post(url, headers=headers, data=payload, json=json)
     except requests.exceptions.RequestException as e:
         print(e)
         return None
-    if r.status_code != 200:
+    if r.status_code != 200 and r.status_code != 201:
         print("Status Code", r.status_code)
         return None
     return r.json()

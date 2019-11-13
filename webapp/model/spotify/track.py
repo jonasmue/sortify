@@ -1,5 +1,6 @@
 from model.spotify.artist import Artist
 from model.spotify.audio_features import AudioFeatureVector
+from util.color import *
 from util.request import *
 
 
@@ -8,18 +9,25 @@ class Track:
     @staticmethod
     def parse_json(json):
         tracks = []
-        for item in json:
-            track = item['track']
-            id = track['id']
-            name = track['name']
-            artists = Artist.parse_json(track['artists'])
-            href = track['href']
-            uri = track['uri']
-            preview_url = track['preview_url']
-            if id is None:
-                continue  # Skip unknown added tracks
-            tracks.append(Track(id, name, artists, href, uri, preview_url))
+        for item in json['items']:
+            track = Track.parse_json_single_track(item)
+            if track is None:
+                continue
+            tracks.append(track)
         return tracks
+
+    @staticmethod
+    def parse_json_single_track(json):
+        track = json['track']
+        id = track['id']
+        name = track['name']
+        artists = Artist.parse_json(track['artists'])
+        href = track['href']
+        uri = track['uri']
+        preview_url = track['preview_url']
+        if id is None:
+            return None  # Skip unknown added tracks
+        return Track(id, name, artists, href, uri, preview_url)
 
     def __init__(self, id, name, artists, href, uri, preview_url):
         self._id = id
@@ -28,6 +36,7 @@ class Track:
         self._href = href
         self._uri = uri
         self._preview_url = preview_url
+        self._color = generate_random_pastel_hsl()
 
     def __eq__(self, other):
         if not isinstance(other, Track):
@@ -58,6 +67,9 @@ class Track:
     def set_audio_features(self, audio_features):
         self._audio_features = audio_features
 
+    def get_color(self):
+        return self._color
+
     def to_dict(self):
         return {
             'id': self.get_id(),
@@ -65,7 +77,8 @@ class Track:
             'artists': [a.to_dict() for a in self.get_artists()],
             'href': self.get_href(),
             'preview_url': self.get_preview_url(),
-            'audio_features': self.get_audio_features().to_dict() if hasattr(self, '_audio_features') else None
+            'audio_features': self.get_audio_features().to_dict() if hasattr(self, '_audio_features') else None,
+            'color': self.get_color()
         }
 
     def augment_audio_features(self):

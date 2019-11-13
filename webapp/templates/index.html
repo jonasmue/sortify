@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -12,37 +13,86 @@
 </head>
 <body>
 
-<!--suppress HtmlUnknownTarget -->
+<div class="loader">
+    <div class="loading-wrapper">
+        <div class="loading-spinner-wrapper">
+            <div class="loading-spinner"></div>
+        </div>
+        <div class="loading-message-wrapper">
+            <div class="loading-message"></div>
+        </div>
+    </div>
+</div>
+
 {% if error %}
-<div class="error">{{ message }}</div>
+
+<div class="error">
+    <div class="error-content">
+        <p class="error-heading">Oh no, it's an <strong>ERROR</strong> 😔😳</p>
+        <p class="error-title"><span class="error-message">{{ message }}</span></p>
+        <p class="error-subtitle">Sorry, this should not have happened!<br>
+            Please try <a href="/">starting over</a>.</p>
+    </div>
+</div>
 {% endif %}
 
-<div class="error socket-error"></div>
+<div class="error socket-error">
+    <div class="error-content">
+        <p class="error-heading">Oh no, it's an <strong>ERROR</strong> 😔😳</p>
+        <p class="error-title"><span class="error-message"></span></p>
+        <p class="error-subtitle"></p>
+    </div>
+</div>
 
 {% if not loggedIn %}
-<a href="login">Login to Spotify</a>
+<!--suppress HtmlUnknownTarget -->
+<div class="login-wrapper">
+    <div class="login-content">
+        <div class="login-link-wrapper">
+            <a href="/login">GET STARTED!</a>
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
+                    <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
 {% endif %}
 
 {% if loggedIn %}
 <div class="content-wrapper">
 
     <div class="playlist-wrapper">
-        <h1 class="playlist-heading">Your Playlists</h1>
-        <p class="description-text">Choose a playlist to sort!</p>
-        <ul class="playlist-list">
-            {% for item in playlists %}
-            <li class="playlist" data-playlist-id="{{item.id}}" data-playlist-name="{{item.name}}"
-                data-playlist-href="{{item.href}}">{{item.name}}
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="top">
+            <h1 class="playlist-heading">Your Playlists</h1>
+            <p class="description-text">Choose a playlist to sort!</p>
+        </div>
+        <div class="bottom">
+            <div class="playlist-list">
+                {% for item in playlists %}
+                <div class="playlist" data-playlist-id="{{item.id}}" data-playlist-name="{{item.name}}"
+                     data-playlist-uri="{{item.uri}}"
+                     data-playlist-href="{{item.href}}"
+                     data-background-color="{{item.color}}">
+                    <div class="playlist-name">
+                        {{item.name}}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
     <div class="track-wrapper">
-        <a class="back-button">Back</a>
-        <h1 class="track-heading"></h1>
-        <p class="description-text">Select a title your playlist should start with!</p>
-        <ol class="track-list"></ol>
+        <div class="top">
+            <a class="back-button">Back</a>
+            <h1 class="track-heading"></h1>
+            <p class="description-text">Select a title your playlist should start with!</p>
+        </div>
+        <div class="bottom">
+            <div class="track-list"></div>
+        </div>
     </div>
 </div>
 {% endif %}
