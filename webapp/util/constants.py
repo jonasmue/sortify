@@ -13,7 +13,7 @@ SPOTIFY_USER_ID = 'user_spotify_id'
 SELECTED_PLAYLIST = 'selected_playlist'
 PLAYLIST_OFFSET = 'playlist_offset'
 
-MAX_PLAYLIST_LENGTH = 500
+MAX_PLAYLIST_LENGTH = 300
 
 DATA_DIR = "data"
 MODEL_URL = os.path.join(DATA_DIR, "glove_model.npz")

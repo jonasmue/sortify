@@ -40,7 +40,7 @@ $(document).ready(function () {
     socket.on('error', function (message) {
         hideLoader();
         if (message === 'Playlist too long') {
-            $('.error-message').html('Sorry, right now we only support playlists up to 500 tracks.');
+            $('.error-message').html('Sorry, right now we only support playlists up to 300 tracks.');
             $('.error-subtitle').html('Please <a href="/">start over</a> and choose a different playlist.');
         } else {
             $('.error-message').html(message);
@@ -62,8 +62,12 @@ $(document).ready(function () {
         selectPlaylist();
     });
 
+    $('.audio-button').on('click', toggleAudio);
+
     $trackList.scroll(function () {
+        stopAnimation();
         stopAudioPlayback();
+        $('.audio-button').hide();
     });
 
     $trackList.scrollEnd(selectTrack, 250);
@@ -73,6 +77,8 @@ $(document).ready(function () {
     selectPlaylist();
 
 });
+
+var audioActivated = true;
 
 // TODO: MODULARIZE
 
@@ -124,10 +130,23 @@ function appendTracks(tracks, socket) {
 function selectElement(element) {
     element.removeClass('selected');
     const index = Math.round(element.parent().scrollTop() / element.outerHeight());
-    let selectedElement = $(element[index]);
-    selectedElement.addClass('selected');
-    $('body').css('background-color', selectedElement.attr('data-background-color'));
-    return selectedElement;
+    let selectedElement = element[index];
+    let $selectedElement = $(selectedElement);
+    $selectedElement.addClass('selected');
+    let diff = selectedElement.scrollWidth - selectedElement.offsetWidth;
+    let duration = Math.min(Math.max(diff, 1) * 50, 15000);
+    if (!$selectedElement.hasClass('move') && diff > 0) {
+        $selectedElement.addClass('move');
+        $selectedElement.animate({
+            'margin-left': '-=' + (diff + 20) + 'px'
+        }, duration, function () {
+            $selectedElement.animate({
+                'margin-left': '0px'
+            }, duration);
+        });
+    }
+    $('body').css('background-color', $selectedElement.attr('data-background-color'));
+    return $selectedElement;
 }
 
 function selectPlaylist() {
@@ -138,15 +157,36 @@ function selectTrack() {
     let selectedTrack = selectElement($('.track'), $('.track-list'));
     let previewUrl = selectedTrack.attr('data-track-preview-url');
     if (previewUrl !== 'null') {
-        const audio = $("<audio id='" + $(this).attr('data-track-id') + "'></audio>")
-            .attr({
-                'src': previewUrl + '.mp3',
-                'autoplay': 'autoplay',
-                'loop': 'true'
-            }).appendTo("body");
-        audio[0].volume = 0;
-        audio.animate({volume: 1}, 1000);
+        if (audioActivated) {
+            const audio = $("<audio id='" + $(this).attr('data-track-id') + "'></audio>")
+                .attr({
+                    'src': previewUrl + '.mp3',
+                    'autoplay': 'autoplay',
+                    'loop': 'true'
+                }).appendTo("body");
+            audio[0].volume = 0;
+            audio.animate({volume: 1}, 1000);
+        }
+        $('.audio-button').show();
     }
+}
+
+function toggleAudio() {
+    audioActivated = !audioActivated;
+    if (audioActivated) {
+        $(".bar").removeClass('no-anim');
+    } else {
+        $(".bar").addClass('no-anim');
+        stopAudioPlayback();
+    }
+    selectTrack();
+}
+
+function stopAnimation() {
+    let $move = $('.move');
+    $move.stop();
+    $move.css('margin-left', 0);
+    $move.removeClass('move');
 }
 
 function stopAudioPlayback() {
