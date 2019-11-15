@@ -25,6 +25,9 @@ class GloveSorter(Model):
         if not self.initialized:
             return None
 
+        if (len(playlist) <= 1):
+            return Playlist(None, playlist.get_name() + ' [sortified]', None, None, playlist.get_tracks())
+
         first_track, remaining_tracks = self.assign_indices(selected_track, playlist)
         if first_track is None:
             return None
@@ -69,6 +72,9 @@ class GloveSorter(Model):
         if not len(unknown_audio_feature_2_track):
             return raw_result
 
+        elif len(unknown_audio_feature_2_track == 1):
+            return raw_result + [list(unknown_audio_feature_2_track.values())[0]]
+
         # Then sort the unknown tracks based on their audio features
         last_known_track = raw_result[-1]
         unknown_sorted_idcs = self.sort_track_ids(last_known_track[2], list(unknown_audio_feature_2_track.keys()),
@@ -94,12 +100,15 @@ class GloveSorter(Model):
         if not len(known_2_track):
             return raw_result
 
+        elif len(known_2_track == 1):
+            return raw_result + [list(known_2_track.values())[0]]
+
         # Then find most similar known track based on audio features
         known_audio_feature_indices = [last_unknown_track[2]] + sorted(
             list(known_audio_feature_2_track.keys()))  # prepend last track, sort list to later index it
         known_audio_features = self.audio_feature_matrix[known_audio_feature_indices]
         most_similar_known_track_idx = known_audio_feature_indices[
-            find_most_similar(0, known_audio_features)[0][0]] # Index 0 is prepended track vector
+            find_most_similar(0, known_audio_features)[0][0]]  # Index 0 is prepended track vector
         most_similar_known_track = known_audio_feature_2_track[most_similar_known_track_idx]
 
         # Then sort all known tracks after it using known features
