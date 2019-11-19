@@ -2,7 +2,7 @@ class Artist:
 
     @staticmethod
     def parse_json(json):
-        return [Artist(a['id'], a['name'], a['name']) for a in json]
+        return [Artist(a['id'], a['name'], a['external_urls']['spotify']) for a in json]
 
     def __init__(self, id, name, href):
         self._id = id

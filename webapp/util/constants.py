@@ -12,7 +12,9 @@ SPOTIFY_USER_ID = 'user_spotify_id'
 
 SELECTED_PLAYLIST = 'selected_playlist'
 PLAYLIST_OFFSET = 'playlist_offset'
+PLAYLISTS_FULLY_LOADED = 'playlists_fully_loaded'
 
+NUM_PLAYLIST_REQUEST = 20
 MAX_PLAYLIST_LENGTH = 300
 
 DATA_DIR = "data"

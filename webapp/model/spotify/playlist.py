@@ -15,7 +15,7 @@ class Playlist:
         playlist = Playlist(
             json['id'],
             json['name'],
-            json['href'],
+            json['external_urls']['spotify'],
             json['uri'],
             None)
         return playlist

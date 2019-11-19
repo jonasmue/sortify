@@ -64,7 +64,14 @@ def spotify_callback():
     access_token = content['access_token']
     session[API_SESSION_TOKEN] = access_token
     _ = content['refresh_token']
-    return get_playlists()
+
+    me_json = get('https://api.spotify.com/v1/me')
+    if me_json is None:
+        return send_error_response('Could not retrieve user data')
+    session[SPOTIFY_USER_ID] = me_json['id']
+    session[PLAYLISTS_FULLY_LOADED] = False
+    session[PLAYLIST_OFFSET] = 0
+    return render_template("index.html", user=me_json, loggedIn=True)
 
 
 ###########################################
@@ -79,6 +86,24 @@ def connect():
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected')
+
+
+@socketio.on('getPlaylists')
+@require_api_token
+def retrieve_playlists(_):
+    if session[PLAYLISTS_FULLY_LOADED]:
+        return
+    payload = {'offset': session[PLAYLIST_OFFSET]}
+    playlist_json = get('https://api.spotify.com/v1/users/' + session[SPOTIFY_USER_ID] + '/playlists', payload)
+    if playlist_json is None:
+        return send_error_response('Could not retrieve playlists')
+
+    playlists = Playlist.parse_json(playlist_json)
+    if playlists is None:
+        return
+    session[PLAYLIST_OFFSET] += 20
+    session[PLAYLISTS_FULLY_LOADED] = len(playlists) < 20
+    emit('playlists', {'playlists': [p.to_dict() for p in playlists], 'loadedAll': session[PLAYLISTS_FULLY_LOADED]});
 
 
 @socketio.on('playlistSelected')
@@ -120,19 +145,6 @@ def sort_playlist(data):
 ################# HELPERS #################
 ###########################################
 
-@require_api_token
-def get_playlists():
-    me_json = get('https://api.spotify.com/v1/me')
-    if me_json is None:
-        return send_error_response('Could not retrieve user data')
-    session[SPOTIFY_USER_ID] = me_json['id']
-    playlist_json = get('https://api.spotify.com/v1/users/' + session[SPOTIFY_USER_ID] + '/playlists')
-    if me_json is None:
-        return send_error_response('Could not retrieve playlists')
-
-    playlists = Playlist.parse_json(playlist_json)
-    return render_template('index.html', playlists=[p.to_dict() for p in playlists], loggedIn=True)
-
 
 @require_api_token
 def load_tracks(playlist_id):
@@ -158,7 +170,8 @@ def load_tracks(playlist_id):
 def create_playlist(sorted_playlist):
     headers = {'Authorization': 'Bearer ' + session[API_SESSION_TOKEN]}
     payload = {'name': sorted_playlist.get_name(), 'public': False, 'description': 'Created by Sortify!'}
-    response = post('https://api.spotify.com/v1/users/' + session[SPOTIFY_USER_ID] + '/playlists', headers, None, payload)
+    response = post('https://api.spotify.com/v1/users/' + session[SPOTIFY_USER_ID] + '/playlists', headers, None,
+                    payload)
     if response is None:
         socket_error('Playlist could not be created')
         return None

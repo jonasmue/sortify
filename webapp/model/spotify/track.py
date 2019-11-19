@@ -20,13 +20,14 @@ class Track:
     def parse_json_single_track(json):
         track = json['track']
         id = track['id']
+        if id is None:
+            # Skip unknown added tracks
+            return None
         name = track['name']
         artists = Artist.parse_json(track['artists'])
-        href = track['href']
+        href = track['external_urls']['spotify']
         uri = track['uri']
         preview_url = track['preview_url']
-        if id is None:
-            return None  # Skip unknown added tracks
         return Track(id, name, artists, href, uri, preview_url)
 
     def __init__(self, id, name, artists, href, uri, preview_url):
@@ -89,7 +90,6 @@ class Track:
             feature_json['energy'],
             feature_json['instrumentalness'],
             feature_json['liveness'],
-            feature_json['loudness'],
             feature_json['speechiness'],
             feature_json['valence'],
             feature_json['tempo']

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
-            integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <title>Sortify</title>
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <script src="/static/js/socket.io.js"></script>
     <script src="/static/js/script.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 <body>
@@ -45,10 +45,15 @@
 </div>
 
 {% if not loggedIn %}
-<!--suppress HtmlUnknownTarget -->
 <div class="login-wrapper">
+    <div class="login-description">
+        <h1>Welcome to Sortify!</h1>
+        <p><strong>Sortify</strong> uses AI to intelligently sort your <strong>Spotify playlists</strong>.<br><strong>Ready
+            to give it a try?</strong></p>
+    </div>
     <div class="login-content">
-        <div class="login-link-wrapper">
+        <div class="button-wrapper">
+            <!--suppress HtmlUnknownTarget -->
             <a href="/login">GET STARTED!</a>
             <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
@@ -63,6 +68,25 @@
 {% if loggedIn %}
 <div class="content-wrapper">
 
+    <div class="me-wrapper">
+        <div class="me-description">
+            <h1>Hey {{user.display_name}}!</h1>
+            TODO: 3 Steps: Choose playlist, select title, enjoy
+            TODO: How does it work
+        </div>
+        <div class="me-content">
+            <div class="button-wrapper">
+                <!--suppress HtmlUnknownTarget -->
+                <a class="playlist-button" href="#">GET PLAYLISTS</a>
+                <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
+                        <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="playlist-wrapper">
         <div class="top">
             <h1 class="playlist-heading">Your Playlists</h1>
@@ -70,16 +94,7 @@
         </div>
         <div class="bottom">
             <div class="playlist-list">
-                {% for item in playlists %}
-                <div class="playlist" data-playlist-id="{{item.id}}" data-playlist-name="{{item.name}}"
-                     data-playlist-uri="{{item.uri}}"
-                     data-playlist-href="{{item.href}}"
-                     data-background-color="{{item.color}}">
-                    <div class="playlist-name">
-                        {{item.name}}
-                    </div>
-                </div>
-                {% endfor %}
+
             </div>
         </div>
     </div>
@@ -101,9 +116,31 @@
             <div class="track-list"></div>
         </div>
     </div>
-</div>
-{% endif %}
 
+    <div class="success-wrapper">
+        <div class="confetti"></div>
+        <div class="success-description">
+            <h1>Success!</h1>
+            <p>Yay! Your playlist has been sorted!</p>
+        </div>
+        <div class="success-content">
+            <div class="button-wrapper">
+                <!--suppress HtmlUnknownTarget -->
+                <a class="spotify-link" target="_blank" href="#">Open in Spotify</a>
+                <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
+                        <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
+                    </svg>
+                </div>
+            </div>
+            <p>
+                <a href="#" class="sort-more">Sort Another Playlist</a>
+            </p>
+        </div>
+    </div>
+</div>
+<audio class="track-audio" loop></audio>
+{% endif %}
 
 </body>
 </html>

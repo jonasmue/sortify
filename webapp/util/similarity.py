@@ -15,8 +15,8 @@ def find_similar(target_index, weights, f, k=1):
     min_indices = np.argpartition(distances, k)[:k]
     result = []
     for idx in min_indices:
-        idx = idx if idx < target_index else idx + 1
         sim_score = distances[idx]
+        idx = idx if idx < target_index else idx + 1
         result.append((idx, sim_score))
     return sorted(result, key=lambda x: x[1])
 

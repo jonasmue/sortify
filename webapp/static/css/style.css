@@ -10,7 +10,7 @@ html, body {
 body {
     color: var(--default-color);
     background-color: var(--main-bg);
-    font-family: 'Source Sans Pro', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     margin: 0;
     transition: background-color 1s;
 }
@@ -31,7 +31,7 @@ a:focus, a:hover {
     color: var(--secondary-accent);
 }
 
-.loader, .error, .login-wrapper {
+.loader, .error, .login-wrapper, .me-wrapper {
     position: absolute;
     background-color: var(--main-bg);
     top: 0;
@@ -127,7 +127,7 @@ a:focus, a:hover {
 }
 
 .top p {
-    margin-bottom: 0;
+    margin: 0;
     font-size: 12px;
 }
 
@@ -146,20 +146,20 @@ a:focus, a:hover {
     width: 100%;
 }
 
-.track-wrapper {
+.track-wrapper, .playlist-wrapper {
     display: none;
 }
 
 .track, .playlist {
     padding: 40px 0;
     font-size: 40px;
-    cursor: pointer;
     color: rgba(0, 0, 0, 0.3);
     position: relative;
     scroll-snap-align: start;
     white-space: nowrap;
     transition: color 1s;
     height: 50px;
+    cursor: pointer;
 }
 
 .track.selected, .playlist.selected {
@@ -187,6 +187,7 @@ a:focus, a:hover {
     scroll-snap-type: y mandatory;
     -webkit-overflow-scrolling: touch;
     height: calc(100vh - 100px);
+    scroll-behavior: smooth;
 }
 
 .playlist-list:before, .track-list:before {
@@ -211,18 +212,30 @@ a:focus, a:hover {
     font-weight: bold;
 }
 
-.login-content {
+.login-description, .me-description, .success-description {
+    position: fixed;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-content, .me-content, .success-content {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
+.login-wrapper h1, .me-wrapper h1, .success-wrapper h1 {
+    font-size: 300%;
+    color: var(--main-accent);
+}
+
 .login-link-wrapper {
     position: relative;
 }
 
-.login-link-wrapper a {
+.button-wrapper a {
     display: block;
     width: 250px;
     height: 50px;
@@ -238,7 +251,7 @@ a:focus, a:hover {
     transition: all .35s;
 }
 
-.login-link-wrapper .icon {
+.button-wrapper .icon {
     width: 50px;
     height: 50px;
     border: 3px solid transparent;
@@ -250,7 +263,7 @@ a:focus, a:hover {
     transition: all .35s;
 }
 
-.login-link-wrapper .icon svg {
+.button-wrapper .icon svg {
     width: 30px;
     position: absolute;
     top: calc(50% - 15px);
@@ -260,14 +273,14 @@ a:focus, a:hover {
     transition: all .35s;
 }
 
-.login-link-wrapper a:hover {
+.button-wrapper a:hover {
     width: 200px;
     border: 3px solid var(--main-accent);
     background: transparent;
     color: var(--main-accent);
 }
 
-.login-link-wrapper a:hover + .icon {
+.button-wrapper a:hover + .icon {
     border: 3px solid var(--main-accent);
     right: -25%;
 }
@@ -307,8 +320,8 @@ a:focus, a:hover {
 }
 
 .bar.no-anim {
-    -webkit-animation: none;
-    -webkit-animation-name: none;
+    -webkit-animation: noDance !important;
+    -webkit-animation-name: noDance !important;
 }
 
 .bar#bar-1 {
@@ -356,9 +369,38 @@ a:focus, a:hover {
     }
 }
 
+@-webkit-keyframes noDance {
+    from {
+        height: 1px;
+    }
+    to {
+        height: 1px;
+    }
+}
+
 .audio-button {
     position: absolute;
     display: none;
     right: 30px;
     top: 30px;
+}
+
+.success-wrapper {
+    display: none;
+}
+
+[class|="confetti"] {
+    position: absolute;
+}
+
+.success-wrapper .red {
+    background-color: var(--main-accent);
+}
+
+.success-wrapper .yellow {
+    background-color: #FAA040;
+}
+
+.success-wrapper .white {
+    background-color: var(--default-color);
 }
