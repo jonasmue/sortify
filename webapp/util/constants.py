@@ -8,7 +8,7 @@ SCOPE = 'playlist-read-collaborative playlist-read-private playlist-modify-priva
 STATE_KEY = 'spotify_auth_state'
 
 API_SESSION_TOKEN = 'api_session_token'
-SPOTIFY_USER_ID = 'user_spotify_id'
+SPOTIFY_USER = 'spotify_user'
 
 SELECTED_PLAYLIST = 'selected_playlist'
 PLAYLIST_OFFSET = 'playlist_offset'

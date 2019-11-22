@@ -31,13 +31,18 @@ a:focus, a:hover {
     color: var(--secondary-accent);
 }
 
-.loader, .error, .login-wrapper, .me-wrapper {
+.loader, .error {
     position: absolute;
     background-color: var(--main-bg);
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
+}
+
+.login-wrapper, .me-wrapper, .success-wrapper {
+    background-color: var(--main-bg);
+    padding: 40px;
 }
 
 .loader {
@@ -213,26 +218,32 @@ a:focus, a:hover {
 }
 
 .login-description, .me-description, .success-description {
-    position: fixed;
-    bottom: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    text-align: center;
 }
 
-.login-content, .me-content, .success-content {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.login-action, .me-action, .success-action {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.me-description img {
+    max-width: 700px;
 }
 
 .login-wrapper h1, .me-wrapper h1, .success-wrapper h1 {
-    font-size: 300%;
+    font-size: 250%;
+    white-space: normal;
     color: var(--main-accent);
 }
 
 .login-link-wrapper {
     position: relative;
+}
+
+.button-wrapper {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .button-wrapper a {
@@ -403,4 +414,9 @@ a:focus, a:hover {
 
 .success-wrapper .white {
     background-color: var(--default-color);
+}
+
+.success-more {
+    margin-top: 100px;
+    text-align: center;
 }

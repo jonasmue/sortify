@@ -184,7 +184,7 @@ function clickSelectedTrack(socket) {
     const trackId = $selected.attr("data-track-id");
     $('.track-list').empty();
     stopAudioPlayback();
-    emitSocket(socket, 'trackSelected', {track_id: trackId}, "Awesome Choice! We are sorting your playlist starting with <strong>" + $selected.attr("data-track-name") + "</strong> ...");
+    emitSocket(socket, 'trackSelected', {track_id: trackId}, "Awesome Choice! We are sorting your playlist starting with <br><strong>" + $selected.attr("data-track-name") + "</strong> ...");
 }
 
 function registerTrackClick(trackItem, socket) {
@@ -209,7 +209,7 @@ function clickSelectedPlaylist(socket) {
         name: playlistName,
         href: playlistHref,
         uri: playlistUri
-    }, 'Stay tuned! Loading songs of <strong>' + playlistName + "</strong> ...");
+    }, 'Stay tuned! Loading songs of <br><strong>' + playlistName + "</strong> ...");
     $selected.removeClass('selected');
     $('.playlist-wrapper').hide('fast');
     $('.track-heading').html(playlistName);
@@ -243,16 +243,20 @@ function appendPlaylists(playlists, socket) {
     const playlistList = $('.playlist-list');
     for (let i in playlists) {
         const playlist = playlists[i];
-        playlistList.append(
-            '<div class="playlist"' +
-            ' data-playlist-id="' + playlist.id + '"' +
-            ' data-playlist-name="' + playlist.name + '"' +
-            ' data-playlist-uri="' + playlist.uri + '"' +
-            ' data-playlist-href="' + playlist.href + '"' +
-            ' data-background-color="' + playlist.color + '">' +
-            '<div class="playlist-name">' + playlist.name + '</div>' +
-            '</div>'
-        );
+        const playlistElement = create('div', {
+            'class': 'playlist',
+            'data-playlist-id': playlist.id,
+            'data-playlist-name': playlist.name,
+            'data-playlist-uri': playlist.uri,
+            'data-playlist-href': playlist.href,
+            'data-background-color': playlist.color
+        });
+        const playlistName = create('div', {
+            'class': 'playlist-name'
+        });
+        playlistName.appendChild(document.createTextNode(playlist.name));
+        playlistElement.appendChild(playlistName);
+        playlistList[0].appendChild(playlistElement);
     }
     registerPlaylistEvents(socket);
     $('.playlist-wrapper').show('fast');
@@ -262,25 +266,25 @@ function appendTracks(tracks, socket) {
     const trackList = $('.track-list');
     for (let i in tracks) {
         const track = tracks[i];
-        // noinspection JSUnresolvedVariable
-        trackList.append('<div class="track" ' +
-            ' data-track-id="' + track.id + '"' +
-            ' data-track-name="' + track.name + '"' +
-            ' data-track-preview-url="' + track.preview_url + '"' +
-            ' data-background-color="' + track.color + '"' +
-            ' data-track-artist="' + track.artists.map(function (a) {
-                return a.name;
-            }).join(",") + '"' +
-            '>' +
-            '<div class="track-info">' +
-            '<span class="track-name">' +
-            track.name +
-            '</span> &mdash; ' +
-            '<span class="track-artist">' +
-            track.artists.map(function (a) {
-                return a.name;
-            }).join(" & ") +
-            '</span></div></div>');
+        const artists = track.artists.map((a) => a.name).join(' & ');
+        const trackElement = create('div', {
+            'class': 'track',
+            'data-track-id': track.id,
+            'data-track-name': track.name,
+            'data-track-preview-url': track.preview_url,
+            'data-background-color': track.color,
+        });
+        const trackInfo = create('div', {'class': 'track-info'});
+        const trackName = create('span', {'class': 'track-name'});
+        const trackArtist = create('span', {'class': 'track-artist'});
+
+        trackName.appendChild(document.createTextNode(track.name));
+        trackArtist.appendChild(document.createTextNode(artists));
+        trackInfo.appendChild(trackName);
+        trackInfo.appendChild(document.createTextNode(' \u2014 '));
+        trackInfo.appendChild(trackArtist);
+        trackElement.appendChild(trackInfo);
+        trackList[0].appendChild(trackElement);
     }
     registerTrackEvents(socket);
     $('.track-wrapper').show('fast', function () {
@@ -439,6 +443,14 @@ $.fn.scrollEnd = function (callback, timeout) {
         $this.data('scrollTimeout', setTimeout(callback, timeout));
     });
 };
+
+function create(element, attributes) {
+    const e = document.createElement(element);
+    for (let value in attributes) {
+        e.setAttribute(value, attributes[value]);
+    }
+    return e;
+}
 
 
 
