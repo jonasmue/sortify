@@ -92,6 +92,7 @@ $(document).ready(function () {
     $('.sort-more').on('click', function () {
         $('.success-wrapper').hide('fast');
         $('.playlist-wrapper').show('fast');
+        selectPlaylist();
     });
 
 });
@@ -107,6 +108,7 @@ let audioActivated = true;
 let loadedAllPlaylists = false;
 let loading = false;
 let isScrolling = false;
+let playRequested = false;
 
 // TODO: MODULARIZE
 
@@ -155,13 +157,13 @@ function isLast($element) {
 }
 
 function backToPlaylists() {
+    stopAudioPlayback();
+    stopAnimation('moveTitle');
     $('.track-wrapper').hide('fast');
-    $trackList = $('.track-list');
+    const $trackList = $('.track-list');
     $trackList.empty();
     $trackList.scrollTop(0);
     $('.playlist-wrapper').show('fast');
-    stopAudioPlayback();
-    stopAnimation('moveTitle');
     selectPlaylist();
     state = State.PLAYLIST;
 }
@@ -178,7 +180,7 @@ function registerPlaylistEvents(socket) {
 
 function clickSelectedTrack(socket) {
     state = State.IDLE;
-    $selected = $('.selected');
+    const $selected = $('.selected');
     const trackId = $selected.attr("data-track-id");
     $('.track-list').empty();
     stopAudioPlayback();
@@ -223,8 +225,17 @@ function registerPlaylistClick(playlistItem, socket) {
         }
         // Hack to get around Safari audio issue
         let $audio = $('.track-audio');
-        $audio[0].play();
-        $audio[0].pause();
+        const playPromise = $audio[0].play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                if (!playRequested) {
+                    $audio[0].pause();
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+        }
     });
 }
 
@@ -313,10 +324,11 @@ function selectTrack() {
     isScrolling = false;
     let selectedTrack = selectElement($('.track'), $('.track-list'));
     let previewUrl = selectedTrack.attr('data-track-preview-url');
-    if (previewUrl !== 'null') {
+    if (previewUrl !== 'null' && typeof previewUrl !== 'undefined') {
         if (audioActivated) {
             const audio = $(".track-audio");
             // Hack to get around Safari restriction
+            playRequested = true;
             audio[0].src = previewUrl + '.mp3';
             audio[0].volume = 0;
             audio[0].play();
@@ -345,6 +357,7 @@ function stopAnimation(cssClass) {
 }
 
 function stopAudioPlayback() {
+    playRequested = false;
     $(".track-audio")[0].pause();
 }
 
