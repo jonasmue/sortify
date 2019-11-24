@@ -334,6 +334,7 @@ Sortify.audioHandler = (function () {
 }());
 
 Sortify.successHandler = (function () {
+    'use strict';
 
     const wrapperSelector = '.success-wrapper';
 
@@ -360,6 +361,7 @@ Sortify.successHandler = (function () {
 }());
 
 Sortify.errorHandler = (function () {
+    'use strict';
 
     function showError(message) {
         console.log('Error', message);
@@ -374,6 +376,8 @@ Sortify.errorHandler = (function () {
 }());
 
 Sortify.loaderHandler = (function () {
+    'use strict';
+
     let loading = false;
 
     const loaderSelector = '.loader';
@@ -512,7 +516,7 @@ Sortify.elementHandler = (function () {
 
     }
 
-    function getSelectedElement($element='body') {
+    function getSelectedElement($element = 'body') {
         return $($element).find('.selected');
     }
 
@@ -535,6 +539,8 @@ Sortify.elementHandler = (function () {
 }());
 
 Sortify.scrollHandler = (function () {
+    'use strict';
+
     let isScrolling = false;
 
     function scrollTo($element) {
@@ -556,6 +562,8 @@ Sortify.scrollHandler = (function () {
 }());
 
 Sortify.socketHandler = (function () {
+    'use strict';
+
     function emitToSocket(socket, socketMessage, data, loaderMessage) {
         Sortify.loaderHandler.showLoader(loaderMessage);
         socket.emit(socketMessage, data)
