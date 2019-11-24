@@ -295,7 +295,10 @@ Sortify.audioHandler = (function () {
 
     function play() {
         const previewUrl = Sortify.elementHandler.getSelectedElement().attr('data-track-preview-url');
-        if (typeof previewUrl === 'undefined' || previewUrl === 'null') return;
+        if (typeof previewUrl === 'undefined' || previewUrl === 'null') {
+            $(audioButtonSelector).hide();
+            return;
+        }
         $(audioButtonSelector).show();
         if (!audioActivated) return;
         // Hack to get around Safari restriction
