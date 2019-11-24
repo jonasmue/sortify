@@ -29,7 +29,7 @@
 <div class="error">
     <div class="error-content">
         <p class="error-heading">Oh no, it's an <strong>ERROR</strong> 😔😳</p>
-        <p class="error-title"><span class="error-message">{{ message }}</span></p>
+        <p class="error-title"><span class="error-message">{{ message.main }}</span></p>
         <p class="error-subtitle">Sorry, this should not have happened!<br>
             Please try <a href="/">starting over</a>.</p>
     </div>
@@ -45,13 +45,13 @@
 </div>
 
 {% if not loggedIn %}
-<div class="login-wrapper">
-    <div class="login-description">
+<div class="info-wrapper login-wrapper">
+    <div class="info-description login-description">
         <h1>Welcome to Sortify!</h1>
         <p><strong>Sortify</strong> uses AI to intelligently sort your <strong>Spotify playlists</strong>.<br><strong>Ready
             to give it a try?</strong></p>
     </div>
-    <div class="login-action">
+    <div class="info-action login-action">
         <div class="button-wrapper">
             <!--suppress HtmlUnknownTarget -->
             <a href="/login">GET STARTED!</a>
@@ -68,13 +68,13 @@
 {% if loggedIn %}
 <div class="content-wrapper">
 
-    <div class="me-wrapper">
-        <div class="me-description">
+    <div class="info-wrapper me-wrapper">
+        <div class="info-description me-description">
             <h1>Hey {{user.display_name}}!</h1>
             <p>Sorting your playlists is as easy as 1 — 2 — 3!</p>
             <img src="/static/img/steps.svg" alt="1. Select a Playlist // 2. Select a starting song // 3. Enjoy!">
         </div>
-        <div class="me-action">
+        <div class="info-action me-action">
             <div class="button-wrapper">
                 <!--suppress HtmlUnknownTarget -->
                 <a class="playlist-button" href="#">GET PLAYLISTS</a>
@@ -87,19 +87,19 @@
         </div>
     </div>
 
-    <div class="playlist-wrapper">
+    <div class="spotify-list-wrapper playlist-wrapper">
         <div class="top">
             <h1 class="playlist-heading">Your Playlists</h1>
             <p class="description-text">Choose a playlist to sort!</p>
         </div>
         <div class="bottom">
-            <div class="playlist-list">
+            <div class="spotify-content playlist-list">
 
             </div>
         </div>
     </div>
 
-    <div class="track-wrapper">
+    <div class="spotify-list-wrapper track-wrapper">
         <div class="top">
             <a class="back-button">Back</a>
             <h1 class="track-heading"></h1>
@@ -113,17 +113,17 @@
             </div>
         </div>
         <div class="bottom">
-            <div class="track-list"></div>
+            <div class="spotify-content track-list"></div>
         </div>
     </div>
 
-    <div class="success-wrapper">
+    <div class="info-wrapper success-wrapper">
         <div class="confetti"></div>
-        <div class="success-description">
+        <div class="info-description success-description">
             <h1>Success!</h1>
             <p>Yay! Your playlist has been sorted!</p>
         </div>
-        <div class="success-action">
+        <div class="info-action success-action">
             <div class="button-wrapper">
                 <!--suppress HtmlUnknownTarget -->
                 <a class="spotify-link" target="_blank" href="#">Open in Spotify</a>

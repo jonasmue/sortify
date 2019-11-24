@@ -1,3 +1,4 @@
+/* GENERAL */
 html, body {
     height: 100%;
     width: 100%;
@@ -23,13 +24,15 @@ h1 {
 
 a, a:visited {
     color: var(--main-accent);
-    text-decoration: underline;
+    text-decoration: underline var(--secondary-accent);
     font-weight: bold;
 }
 
 a:focus, a:hover {
     color: var(--secondary-accent);
 }
+
+/* LOADER AND ERROR */
 
 .loader, .error {
     position: absolute;
@@ -71,7 +74,7 @@ a:focus, a:hover {
     animation: spin 1s ease-in-out infinite;
     -webkit-animation: spin 1s ease-in-out infinite;
     position: absolute;
-    top: 50%;
+    top: 30%;
     left: 50%;
     margin-top: -100px;
     margin-left: -25px;
@@ -80,7 +83,7 @@ a:focus, a:hover {
 .loading-message-wrapper {
     width: 100%;
     text-align: center;
-    top: 50%;
+    top: 30%;
     position: absolute;
     font-size: initial;
     font-weight: 200;
@@ -131,15 +134,17 @@ a:focus, a:hover {
     }
 }
 
-.top p {
-    margin: 0;
-    font-size: 12px;
-}
+/* PLAYLIST AND TRACKLIST */
 
 .top {
     height: 90px;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
     padding: 10px 60px 0 30px;
+}
+
+.top p {
+    margin: 0;
+    font-size: 12px;
 }
 
 .bottom {
@@ -151,11 +156,11 @@ a:focus, a:hover {
     width: 100%;
 }
 
-.track-wrapper, .playlist-wrapper {
+.spotify-list-wrapper {
     display: none;
 }
 
-.track, .playlist {
+.spotify-list-item {
     padding: 40px 0;
     font-size: 40px;
     color: rgba(0, 0, 0, 0.3);
@@ -167,24 +172,24 @@ a:focus, a:hover {
     cursor: pointer;
 }
 
-.track.selected, .playlist.selected {
+.spotify-list-item.selected {
     color: var(--default-color);
     transition: color 300ms;
 }
 
-.track:last-of-type, .playlist:last-of-type {
-    padding-bottom: calc(100vh - 186px);
+.spotify-list-item:last-of-type {
+    padding-bottom: calc(100vh - 190px);
 }
 
 .playlist-name, .track-info {
     padding-left: 30px;
 }
 
-.playlist-name {
+.playlist-name, .track-name {
     font-weight: bold;
 }
 
-.playlist-list, .track-list {
+.spotify-content {
     position: relative;
     width: 100%;
     overflow-y: scroll;
@@ -195,7 +200,7 @@ a:focus, a:hover {
     scroll-behavior: smooth;
 }
 
-.playlist-list:before, .track-list:before {
+.spotify-content:before {
     content: "";
     display: block;
     width: 0;
@@ -207,93 +212,6 @@ a:focus, a:hover {
     left: 0;
     top: 154px;
     z-index: 1;
-}
-
-.socket-error {
-    display: none;
-}
-
-.track-name {
-    font-weight: bold;
-}
-
-.login-description, .me-description, .success-description {
-    text-align: center;
-}
-
-.login-action, .me-action, .success-action {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.me-description img {
-    max-width: 700px;
-}
-
-.login-wrapper h1, .me-wrapper h1, .success-wrapper h1 {
-    font-size: 250%;
-    white-space: normal;
-    color: var(--main-accent);
-}
-
-.login-link-wrapper {
-    position: relative;
-}
-
-.button-wrapper {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.button-wrapper a {
-    display: block;
-    width: 250px;
-    height: 50px;
-    line-height: 50px;
-    font-weight: bold;
-    text-decoration: none;
-    text-align: center;
-    color: #fff;
-    background-color: var(--main-bg);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border: 3px solid var(--default-color);
-    transition: all 300ms;
-}
-
-.button-wrapper .icon {
-    width: 50px;
-    height: 50px;
-    border: 3px solid transparent;
-    position: absolute;
-    transform: rotate(45deg);
-    right: 0;
-    top: 0;
-    z-index: -1;
-    transition: all 300ms;
-}
-
-.button-wrapper .icon svg {
-    width: 30px;
-    position: absolute;
-    top: calc(50% - 15px);
-    left: calc(50% - 15px);
-    transform: rotate(-45deg);
-    fill: var(--main-accent);
-    transition: all 300ms;
-}
-
-.button-wrapper a:hover {
-    width: 200px;
-    border: 3px solid var(--main-accent);
-    background: transparent;
-    color: var(--main-accent);
-}
-
-.button-wrapper a:hover + .icon {
-    border: 3px solid var(--main-accent);
-    right: -25%;
 }
 
 .back-button, .back-button:focus, .back-button:hover {
@@ -394,6 +312,83 @@ a:focus, a:hover {
     display: none;
     right: 30px;
     top: 30px;
+}
+
+/* Info Content */
+
+.info-description {
+    text-align: center;
+}
+
+.info-action {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.info-description img {
+    max-width: 700px;
+}
+
+.info-wrapper h1 {
+    font-size: 250%;
+    white-space: normal;
+    color: var(--main-accent);
+}
+
+.button-wrapper {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.button-wrapper a {
+    display: block;
+    width: 250px;
+    height: 50px;
+    line-height: 50px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    background-color: var(--main-bg);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 3px solid var(--default-color);
+    transition: all 300ms;
+}
+
+.button-wrapper .icon {
+    width: 50px;
+    height: 50px;
+    border: 3px solid transparent;
+    position: absolute;
+    transform: rotate(45deg);
+    right: 0;
+    top: 0;
+    z-index: -1;
+    transition: all 300ms;
+}
+
+.button-wrapper .icon svg {
+    width: 30px;
+    position: absolute;
+    top: calc(50% - 15px);
+    left: calc(50% - 15px);
+    transform: rotate(-45deg);
+    fill: var(--main-accent);
+    transition: all 300ms;
+}
+
+.button-wrapper a:hover {
+    width: 200px;
+    border: 3px solid var(--main-accent);
+    background: transparent;
+    color: var(--main-accent);
+}
+
+.button-wrapper a:hover + .icon {
+    border: 3px solid var(--main-accent);
+    right: -25%;
 }
 
 .success-wrapper {

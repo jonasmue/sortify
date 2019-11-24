@@ -162,7 +162,8 @@ def load_tracks(playlist_id):
         tracks.extend(Track.parse_json(track_json))
         session[PLAYLIST_OFFSET] += len(track_json['items'])
         if session[PLAYLIST_OFFSET] > MAX_PLAYLIST_LENGTH:
-            socket_error('Playlist too long')
+            socket_error('Sorry! Right now we only support playlists with up to 300 tracks.',
+                         'Please <a href="/">start over</a> and choose a different playlist.')
             return None
         if len(track_json['items']) < 100:
             break
@@ -195,8 +196,11 @@ def add_tracks_to_playlist(playlist, tracks):
         lower_index += 100
 
 
-def socket_error(message=''):
-    emit('error', message)
+def socket_error(main='', subtitle=None):
+    if subtitle is None:
+        subtitle = 'Sorry, this should not have happened!<br>Please try <a href="/">starting over</a>.'
+
+    emit('error', {'main': main, 'subtitle': subtitle})
 
 
 def send_error_response(message=''):
