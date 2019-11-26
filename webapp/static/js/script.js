@@ -97,9 +97,9 @@ Sortify.listHandler = (function () {
         Sortify.setState(State.PLAYLIST);
     }
 
-    function resetPlaylists() {
+    function resetPlaylists(socket) {
         $(playlistListSelector).empty();
-        Sortify.socketHandler.emitToSocket('resetPlaylists')
+        Sortify.socketHandler.emitToSocket(socket, 'resetPlaylists', null, 'Getting your playlists...')
     }
 
     function clickSelectedTrack(socket) {
@@ -354,10 +354,10 @@ Sortify.successHandler = (function () {
         Sortify.animationHandler.showConfetti(wrapperSelector);
     }
 
-    function registerEvents() {
+    function registerEvents(socket) {
         $('.sort-more').on('click', function () {
             $(wrapperSelector).hide('fast');
-            Sortify.listHandler.resetPlaylists();
+            Sortify.listHandler.resetPlaylists(socket);
         });
     }
 
@@ -614,7 +614,7 @@ $(document).ready(function () {
     Sortify.listHandler.registerEvents(socket);
     Sortify.audioHandler.registerEvents();
     Sortify.keyEventHandler.registerEvents(socket);
-    Sortify.successHandler.registerEvents();
+    Sortify.successHandler.registerEvents(socket);
 });
 
 /************************************
