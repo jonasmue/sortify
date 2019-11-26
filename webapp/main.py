@@ -121,7 +121,7 @@ def retrieve_playlists(_):
 
 @socketio.on('resetPlaylists')
 @require_api_token
-def reset_playlists():
+def reset_playlists(_):
     session[PLAYLIST_OFFSET] = 0
     session[PLAYLISTS_FULLY_LOADED] = False
     retrieve_playlists()
