@@ -82,8 +82,8 @@ class Track:
             'color': self.get_color()
         }
 
-    def augment_audio_features(self):
-        feature_json = get('https://api.spotify.com/v1/audio-features/' + self.get_id())
+    def augment_audio_features(self, socketio):
+        feature_json = get('https://api.spotify.com/v1/audio-features/' + self.get_id(), socketio)
         if feature_json is not None:
             self.set_audio_features(AudioFeatureVector(
                 feature_json['acousticness'],

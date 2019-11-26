@@ -6,10 +6,11 @@ from model.spotify.playlist import Playlist
 
 class GloveSorter(Model):
 
-    def __init__(self, model_path, track_map_path):
+    def __init__(self, model_path, track_map_path, socket):
         super().__init__()
         self._model_path = model_path
         self._track_map_path = track_map_path
+        self._socket = socket
 
     def initialize(self):
         with open(self._track_map_path, "rb") as f:
@@ -125,7 +126,7 @@ class GloveSorter(Model):
         remaining_tracks = []
         first_track = None
         for i, track in enumerate(playlist.get_tracks()):
-            track.augment_audio_features()
+            track.augment_audio_features(self._socket)
             assigned = (track, self.get_matrix_index(track), i)
             if track is not selected_track:
                 remaining_tracks.append(assigned)

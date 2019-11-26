@@ -1,9 +1,8 @@
-from time import sleep
 import requests
 from util.api import *
 
 
-def get(url, payload=None):
+def get(url, socket, payload=None):
     if API_SESSION_TOKEN not in session:
         return None
     headers = {'Authorization': 'Bearer ' + session[API_SESSION_TOKEN]}
@@ -14,7 +13,7 @@ def get(url, payload=None):
         print(e)
         return None
     if r.status_code == 429:
-        sleep(5)
+        socket.sleep(5)
         r = requests.get(url, headers=headers, params=payload)
     if r.status_code != 200:
         print("Status Code", r.status_code)

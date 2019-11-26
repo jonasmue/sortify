@@ -1,15 +1,13 @@
-import shutil
 import urllib.request
-
 from base64 import b64encode
 from urllib.parse import urlencode
 
 from flask import Flask, request, render_template, redirect
 from flask_socketio import SocketIO, emit
 
-from model.vector.glove_sorter import GloveSorter
 from model.spotify.playlist import Playlist
 from model.spotify.track import Track
+from model.vector.glove_sorter import GloveSorter
 from util.request import *
 
 # Download Files
@@ -23,7 +21,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = generate_random_string(32)
 socketio = SocketIO(app, ping_timeout=120)
 
-model = GloveSorter(os.path.join('data', 'glove_model.npz'), os.path.join('data', 'track_map.dms'))
+model = GloveSorter(os.path.join('data', 'glove_model.npz'), os.path.join('data', 'track_map.dms'), socketio)
 model.initialize()
 
 
@@ -78,7 +76,7 @@ def spotify_callback():
     session[API_SESSION_TOKEN] = access_token
     _ = content['refresh_token']
 
-    me_json = get('https://api.spotify.com/v1/me')
+    me_json = get('https://api.spotify.com/v1/me', socketio)
     if me_json is None:
         return send_error_response('Could not retrieve user data')
     session[SPOTIFY_USER] = me_json
@@ -107,7 +105,7 @@ def retrieve_playlists(_):
     if session[PLAYLISTS_FULLY_LOADED]:
         return
     payload = {'offset': session[PLAYLIST_OFFSET]}
-    playlist_json = get('https://api.spotify.com/v1/users/' + session[SPOTIFY_USER]['id'] + '/playlists', payload)
+    playlist_json = get('https://api.spotify.com/v1/users/' + session[SPOTIFY_USER]['id'] + '/playlists', socketio, payload)
     if playlist_json is None:
         return send_error_response('Could not retrieve playlists')
 
@@ -177,7 +175,7 @@ def load_tracks(playlist_id):
     tracks = []
     while True:
         track_json = get('https://api.spotify.com/v1/playlists/' + playlist_id + '/tracks',
-                         payload={'offset': session[PLAYLIST_OFFSET]})
+                         socketio, payload={'offset': session[PLAYLIST_OFFSET]})
         if track_json is None:
             socket_error('Could not retrieve tracks')
             return
