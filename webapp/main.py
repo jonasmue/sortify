@@ -1,3 +1,4 @@
+import urllib.request
 from base64 import b64encode
 from urllib.parse import urlencode
 
@@ -9,11 +10,17 @@ from model.spotify.playlist import Playlist
 from model.spotify.track import Track
 from util.request import *
 
+# Download Files
+os.mkdir('data')
+urllib.request.urlretrieve(TRACK_MAP_URL, os.path.join('data', 'track_map.dms'))
+urllib.request.urlretrieve(MODEL_URL, os.path.join('data', 'glove_model.npz'))
+
+# Start app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = generate_random_string(32)
 socketio = SocketIO(app)
 
-model = GloveSorter(MODEL_URL, TRACK_MAP_URL)
+model = GloveSorter(os.path.join('data', 'glove_model.npz'), os.path.join('data', 'track_map.dms'))
 model.initialize()
 
 
@@ -208,4 +215,4 @@ def send_error_response(message=''):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0')
+    socketio.run(app, host='0.0.0.0', port=80)

@@ -2,7 +2,7 @@ import os
 
 CLIENT_ID = os.environ['CLIENT_ID']
 CLIENT_SECRET = os.environ['CLIENT_SECRET']
-REDIRECT_URI = 'http://localhost:5000/callback'
+REDIRECT_URI = 'https://sortify-260106.appspot.com/callback'
 SCOPE = 'playlist-read-collaborative playlist-read-private playlist-modify-private'
 
 STATE_KEY = 'spotify_auth_state'
@@ -17,6 +17,6 @@ PLAYLISTS_FULLY_LOADED = 'playlists_fully_loaded'
 NUM_PLAYLIST_REQUEST = 20
 MAX_PLAYLIST_LENGTH = 300
 
-DATA_DIR = "data"
-MODEL_URL = os.path.join(DATA_DIR, "glove_model.npz")
-TRACK_MAP_URL = os.path.join(DATA_DIR, "track_map.dms")
+DATA_URL = "https://storage.googleapis.com/sortify-260106.appspot.com/data"
+MODEL_URL = os.path.join(DATA_URL, "glove_model.npz")
+TRACK_MAP_URL = os.path.join(DATA_URL, "track_map.dms")
