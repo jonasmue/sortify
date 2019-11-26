@@ -122,7 +122,7 @@ def retrieve_playlists(_):
 def reset_playlists(_):
     session[PLAYLIST_OFFSET] = 0
     session[PLAYLISTS_FULLY_LOADED] = False
-    retrieve_playlists()
+    retrieve_playlists(None)
 
 
 @socketio.on('playlistSelected')
