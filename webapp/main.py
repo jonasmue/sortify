@@ -1,4 +1,6 @@
+import shutil
 import urllib.request
+
 from base64 import b64encode
 from urllib.parse import urlencode
 
@@ -11,9 +13,10 @@ from model.spotify.track import Track
 from util.request import *
 
 # Download Files
-os.mkdir('data')
-urllib.request.urlretrieve(TRACK_MAP_URL, os.path.join('data', 'track_map.dms'))
-urllib.request.urlretrieve(MODEL_URL, os.path.join('data', 'glove_model.npz'))
+if not os.path.exists('data'):
+    os.mkdir('data')
+    urllib.request.urlretrieve(TRACK_MAP_URL, os.path.join('data', 'track_map.dms'))
+    urllib.request.urlretrieve(MODEL_URL, os.path.join('data', 'glove_model.npz'))
 
 # Start app
 app = Flask(__name__)
@@ -215,4 +218,4 @@ def send_error_response(message=''):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=80)
+    socketio.run(app, host='0.0.0.0', port=8080)
