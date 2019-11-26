@@ -118,7 +118,7 @@ class GloveSorter(Model):
         known_sorted_tracks = [known_2_track[idx] for idx in known_sorted_idcs]
         raw_result.extend(known_sorted_tracks)
 
-        self.save_figure(known_sorted_idcs, known_sorted_tracks, plist_name)
+        # self.save_figure(known_sorted_idcs, known_sorted_tracks, plist_name)
         return raw_result
 
     def assign_indices(self, selected_track, playlist):
