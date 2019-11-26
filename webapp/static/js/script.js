@@ -97,6 +97,11 @@ Sortify.listHandler = (function () {
         Sortify.setState(State.PLAYLIST);
     }
 
+    function resetPlaylists() {
+        $(playlistListSelector).empty();
+        Sortify.socketHandler.emitToSocket('resetPlaylists')
+    }
+
     function clickSelectedTrack(socket) {
         Sortify.setState(State.IDLE);
         const selected = Sortify.elementHandler.getSelectedElement();
@@ -265,10 +270,10 @@ Sortify.listHandler = (function () {
         backToPlaylists: backToPlaylists,
         clickSelectedPlaylist: clickSelectedPlaylist,
         clickSelectedTrack: clickSelectedTrack,
-        selectPlaylist: selectPlaylist,
         appendPlaylists: appendPlaylists,
         appendTracks: appendTracks,
-        registerEvents: registerEvents
+        registerEvents: registerEvents,
+        resetPlaylists: resetPlaylists
     }
 }());
 
@@ -352,8 +357,7 @@ Sortify.successHandler = (function () {
     function registerEvents() {
         $('.sort-more').on('click', function () {
             $(wrapperSelector).hide('fast');
-            $('.playlist-wrapper').show('fast');
-            Sortify.listHandler.selectPlaylist();
+            Sortify.listHandler.resetPlaylists();
         });
     }
 

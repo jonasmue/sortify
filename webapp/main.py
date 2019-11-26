@@ -119,6 +119,14 @@ def retrieve_playlists(_):
     emit('playlists', {'playlists': [p.to_dict() for p in playlists], 'loadedAll': session[PLAYLISTS_FULLY_LOADED]})
 
 
+@socketio.on('resetPlaylists')
+@require_api_token
+def reset_playlists():
+    session[PLAYLIST_OFFSET] = 0
+    session[PLAYLISTS_FULLY_LOADED] = False
+    retrieve_playlists()
+
+
 @socketio.on('playlistSelected')
 @require_api_token
 def retrieve_playlist(data):
