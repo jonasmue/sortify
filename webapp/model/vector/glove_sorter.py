@@ -67,7 +67,7 @@ class GloveSorter(Model):
         known_sorted_tracks.extend([known_2_track[idx] for idx in known_sorted_idcs[1:]])  # First track already covered
         raw_result.extend(known_sorted_tracks)
 
-        self.save_figure(known_sorted_idcs, known_sorted_tracks, plist_name)
+        # self.save_figure(known_sorted_idcs, known_sorted_tracks, plist_name)
 
         if not len(unknown_audio_feature_2_track):
             return raw_result
