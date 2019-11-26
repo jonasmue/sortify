@@ -1,3 +1,4 @@
+from time import sleep
 import requests
 from util.api import *
 
@@ -12,6 +13,9 @@ def get(url, payload=None):
     except requests.exceptions.RequestException as e:  # This is the correct syntax
         print(e)
         return None
+    if r.status_code == 429:
+        sleep(5)
+        r = requests.get(url, headers=headers, params=payload)
     if r.status_code != 200:
         print("Status Code", r.status_code)
         return None

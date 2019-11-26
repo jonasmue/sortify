@@ -84,13 +84,14 @@ class Track:
 
     def augment_audio_features(self):
         feature_json = get('https://api.spotify.com/v1/audio-features/' + self.get_id())
-        self.set_audio_features(AudioFeatureVector(
-            feature_json['acousticness'],
-            feature_json['danceability'],
-            feature_json['energy'],
-            feature_json['instrumentalness'],
-            feature_json['liveness'],
-            feature_json['speechiness'],
-            feature_json['valence'],
-            feature_json['tempo']
-        ))
+        if feature_json is not None:
+            self.set_audio_features(AudioFeatureVector(
+                feature_json['acousticness'],
+                feature_json['danceability'],
+                feature_json['energy'],
+                feature_json['instrumentalness'],
+                feature_json['liveness'],
+                feature_json['speechiness'],
+                feature_json['valence'],
+                feature_json['tempo']
+            ))
