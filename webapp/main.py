@@ -142,7 +142,12 @@ def sort_playlist(data):
     if not model.initialized:
         socket_error('Model is not initialized yet')
         return
-    sorted_playlist = model.sort_playlist(session[SELECTED_PLAYLIST], track)
+    try:
+        sorted_playlist = model.sort_playlist(session[SELECTED_PLAYLIST], track)
+    except:
+        socket_error('There was an error with the connection to Spotify. Please try a smaller playlist.')
+        return
+
     if sorted_playlist is None:
         socket_error('Playlist could not be sorted')
         return
