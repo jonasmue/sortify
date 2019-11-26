@@ -174,8 +174,8 @@ Sortify.listHandler = (function () {
             playlistElement.appendChild(playlistName);
             $(playlistListSelector)[0].appendChild(playlistElement);
         }
-        registerPlaylistClick(socket);
         if ($(playlistWrapperSelector).is(":hidden")) {
+            registerPlaylistClick(socket);
             $(playlistWrapperSelector).show('fast');
             $(playlistListSelector).css('scroll-behavior', 'auto');
             $(playlistListSelector)[0].scrollTop = 0;
