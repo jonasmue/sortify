@@ -21,7 +21,7 @@ if not os.path.exists('data'):
 # Start app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = generate_random_string(32)
-socketio = SocketIO(app)
+socketio = SocketIO(app, ping_timeout=120)
 
 model = GloveSorter(os.path.join('data', 'glove_model.npz'), os.path.join('data', 'track_map.dms'))
 model.initialize()
