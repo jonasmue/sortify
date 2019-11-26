@@ -99,6 +99,9 @@ Sortify.listHandler = (function () {
 
     function resetPlaylists(socket) {
         $(playlistListSelector).empty();
+        $(playlistListSelector).css('scroll-behavior', 'auto');
+        $(playlistListSelector)[0].scrollTop = 0;
+        $(playlistListSelector).css('scroll-behavior', 'smooth');
         Sortify.socketHandler.emitToSocket(socket, 'resetPlaylists', null, 'Getting your playlists...')
     }
 
