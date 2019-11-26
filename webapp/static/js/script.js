@@ -175,10 +175,12 @@ Sortify.listHandler = (function () {
             $(playlistListSelector)[0].appendChild(playlistElement);
         }
         registerPlaylistClick(socket);
-        $(playlistWrapperSelector).show('fast');
-        $(playlistListSelector).css('scroll-behavior', 'auto');
-        $(playlistListSelector)[0].scrollTop = 0;
-        $(playlistListSelector).css('scroll-behavior', 'smooth');
+        if ($(playlistWrapperSelector).is(":hidden")) {
+            $(playlistWrapperSelector).show('fast');
+            $(playlistListSelector).css('scroll-behavior', 'auto');
+            $(playlistListSelector)[0].scrollTop = 0;
+            $(playlistListSelector).css('scroll-behavior', 'smooth');
+        }
         selectPlaylist();
     }
 
