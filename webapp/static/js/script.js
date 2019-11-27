@@ -83,6 +83,8 @@ Sortify.listHandler = (function () {
     const trackListSelector = '.track-list';
     const trackSelector = '.track';
 
+    const nextIndicatorSelector = '.next-indicator';
+
 
     function backToPlaylists() {
         Sortify.audioHandler.stopAudioPlayback();
@@ -210,18 +212,20 @@ Sortify.listHandler = (function () {
         }
         registerTrackClick(socket);
         $(trackWrapperSelector).show('fast', function () {
-            Sortify.animationHandler.maybeAnimateOverflowingElement('moveTitle', $(trackHeadingSelector), 30000);
+            Sortify.animationHandler.maybeAnimateOverflowingElement('moveTitle', $(trackHeadingSelector), 0,30000);
         });
         selectTrack();
     }
 
     function selectPlaylist() {
         Sortify.scrollHandler.setScrolling(false);
+        $(nextIndicatorSelector).show();
         Sortify.elementHandler.selectElement($(playlistSelector));
     }
 
     function selectTrack() {
         Sortify.scrollHandler.setScrolling(false);
+        $(nextIndicatorSelector).show();
         Sortify.elementHandler.selectElement($(trackSelector));
         Sortify.audioHandler.play();
     }
@@ -249,6 +253,7 @@ Sortify.listHandler = (function () {
 
         $(playlistListSelector).scroll(function () {
             Sortify.scrollHandler.setScrolling(true);
+            $(nextIndicatorSelector).hide();
             Sortify.elementHandler.unselectElement($(playlistListSelector));
             Sortify.animationHandler.stopAnimation('move');
             let playlistCount = $(playlistSelector).length;
@@ -260,6 +265,7 @@ Sortify.listHandler = (function () {
 
         $(trackListSelector).scroll(function () {
             Sortify.scrollHandler.setScrolling(true);
+            $(nextIndicatorSelector).hide();
             Sortify.elementHandler.unselectElement($(trackListSelector));
             Sortify.animationHandler.stopAnimation('move');
             Sortify.audioHandler.stopAudioPlayback();
@@ -269,6 +275,14 @@ Sortify.listHandler = (function () {
         $(trackListSelector).scrollEnd(selectTrack, 250);
 
         $(playlistListSelector).scrollEnd(selectPlaylist, 250);
+
+        $(nextIndicatorSelector).on('click', function () {
+            if (Sortify.getState() === State.PLAYLIST) {
+                clickSelectedPlaylist(socket);
+            } else if (Sortify.getState() === State.TRACKS) {
+                clickSelectedTrack(socket);
+            }
+        });
     }
 
     return {
@@ -418,14 +432,14 @@ Sortify.loaderHandler = (function () {
 Sortify.animationHandler = (function () {
     'use strict';
 
-    function maybeAnimateOverflowingElement(cssClass, $selectedElement, maxDuration = 15000) {
+    function maybeAnimateOverflowingElement(cssClass, $selectedElement, extraSpace=0, maxDuration = 15000) {
         if (!$selectedElement.length) return;
         let diff = $selectedElement[0].scrollWidth - $selectedElement[0].offsetWidth;
         let duration = Math.min(Math.max(diff, 100) * 50, maxDuration);
         if (!$selectedElement.hasClass(cssClass) && diff > 0) {
             $selectedElement.addClass(cssClass);
             $selectedElement.animate({
-                'margin-left': '-=' + (diff + 20) + 'px'
+                'margin-left': '-=' + (diff + 20 + extraSpace) + 'px'
             }, duration, function () {
                 $selectedElement.animate({
                     'margin-left': '0px'
@@ -516,7 +530,7 @@ Sortify.elementHandler = (function () {
         const index = Math.round($element.parent().scrollTop() / $element.outerHeight());
         let $selectedElement = $($element[index]);
         $selectedElement.addClass('selected');
-        Sortify.animationHandler.maybeAnimateOverflowingElement('move', $selectedElement);
+        Sortify.animationHandler.maybeAnimateOverflowingElement('move', $selectedElement, 50);
         let color = $selectedElement.attr('data-background-color');
         $('body').css('background-color', color);
         return $selectedElement;
