@@ -108,6 +108,7 @@ Sortify.listHandler = (function () {
         Sortify.setState(State.IDLE);
         const selected = Sortify.elementHandler.getSelectedElement();
         const trackId = selected.attr("data-track-id");
+        $(nextIndicatorSelector).hide();
         $(trackListSelector).empty();
         Sortify.audioHandler.stopAudioPlayback();
         Sortify.socketHandler.emitToSocket(socket,
