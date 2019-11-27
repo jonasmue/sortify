@@ -108,8 +108,8 @@ Sortify.listHandler = (function () {
         Sortify.setState(State.IDLE);
         const selected = Sortify.elementHandler.getSelectedElement();
         const trackId = selected.attr("data-track-id");
-        $(nextIndicatorSelector).hide();
         $(trackListSelector).empty();
+        $(nextIndicatorSelector).hide();
         Sortify.audioHandler.stopAudioPlayback();
         Sortify.socketHandler.emitToSocket(socket,
             'trackSelected',
@@ -213,7 +213,7 @@ Sortify.listHandler = (function () {
         }
         registerTrackClick(socket);
         $(trackWrapperSelector).show('fast', function () {
-            Sortify.animationHandler.maybeAnimateOverflowingElement('moveTitle', $(trackHeadingSelector), 0,30000);
+            Sortify.animationHandler.maybeAnimateOverflowingElement('moveTitle', $(trackHeadingSelector), 0, 30000);
         });
         selectTrack();
     }
@@ -433,7 +433,7 @@ Sortify.loaderHandler = (function () {
 Sortify.animationHandler = (function () {
     'use strict';
 
-    function maybeAnimateOverflowingElement(cssClass, $selectedElement, extraSpace=0, maxDuration = 15000) {
+    function maybeAnimateOverflowingElement(cssClass, $selectedElement, extraSpace = 0, maxDuration = 15000) {
         if (!$selectedElement.length) return;
         let diff = $selectedElement[0].scrollWidth - $selectedElement[0].offsetWidth;
         let duration = Math.min(Math.max(diff, 100) * 50, maxDuration);
