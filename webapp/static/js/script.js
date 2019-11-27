@@ -213,7 +213,7 @@ Sortify.listHandler = (function () {
         }
         registerTrackClick(socket);
         $(trackWrapperSelector).show('fast', function () {
-            Sortify.animationHandler.maybeAnimateOverflowingElement('moveTitle', $(trackHeadingSelector), 0, 30000);
+            Sortify.animationHandler.maybeAnimateOverflowingElement('moveTitle', $(trackHeadingSelector), 30000);
         });
         selectTrack();
     }
@@ -435,14 +435,14 @@ Sortify.loaderHandler = (function () {
 Sortify.animationHandler = (function () {
     'use strict';
 
-    function maybeAnimateOverflowingElement(cssClass, $selectedElement, extraSpace = 0, maxDuration = 15000) {
+    function maybeAnimateOverflowingElement(cssClass, $selectedElement, maxDuration = 15000) {
         if (!$selectedElement.length) return;
         let diff = $selectedElement[0].scrollWidth - $selectedElement[0].offsetWidth;
         let duration = Math.min(Math.max(diff, 100) * 50, maxDuration);
         if (!$selectedElement.hasClass(cssClass) && diff > 0) {
             $selectedElement.addClass(cssClass);
             $selectedElement.animate({
-                'margin-left': '-=' + (diff + 20 + extraSpace) + 'px'
+                'margin-left': '-=' + (diff + 20) + 'px'
             }, duration, function () {
                 $selectedElement.animate({
                     'margin-left': '0px'
@@ -533,7 +533,7 @@ Sortify.elementHandler = (function () {
         const index = Math.round($element.parent().scrollTop() / $element.outerHeight());
         let $selectedElement = $($element[index]);
         $selectedElement.addClass('selected');
-        Sortify.animationHandler.maybeAnimateOverflowingElement('move', $selectedElement, 50);
+        Sortify.animationHandler.maybeAnimateOverflowingElement('move', $selectedElement);
         let color = $selectedElement.attr('data-background-color');
         $('body').css('background-color', color);
         return $selectedElement;
