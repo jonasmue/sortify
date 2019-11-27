@@ -1,6 +1,7 @@
 import urllib.request
 from base64 import b64encode
 from urllib.parse import urlencode
+from threading import Lock
 
 from flask import Flask, request, render_template, redirect
 from flask_socketio import SocketIO, emit
@@ -17,9 +18,11 @@ if not os.path.exists('data'):
     urllib.request.urlretrieve(MODEL_URL, os.path.join('data', 'glove_model.npz'))
 
 # Start app
+async_mode = 'eventlet'
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = generate_random_string(32)
-socketio = SocketIO(app, ping_timeout=120)
+socketio = SocketIO(app, async_mode=async_mode)
 
 model = GloveSorter(os.path.join('data', 'glove_model.npz'), os.path.join('data', 'track_map.dms'), socketio)
 model.initialize()
@@ -91,7 +94,7 @@ def spotify_callback():
 
 @socketio.on('connect')
 def connect():
-    emit('my response', {'data': 'Connected'})
+    print('Connected')
 
 
 @socketio.on('disconnect')
