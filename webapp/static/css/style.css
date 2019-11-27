@@ -216,10 +216,10 @@ a:focus, a:hover {
 
 .next-indicator {
     position: absolute;
-    right: 15px;
+    right: 30px;
     width: 35px;
     height: 35px;
-    top: 144px;
+    bottom: 30px;
     z-index: 1;
     display: none;
     transform: rotate(-45deg);
