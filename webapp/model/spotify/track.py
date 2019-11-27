@@ -95,3 +95,5 @@ class Track:
                 feature_json['valence'],
                 feature_json['tempo']
             ))
+        else:
+            raise RuntimeError("Could not receive audio features.")
