@@ -219,12 +219,14 @@ Sortify.listHandler = (function () {
     }
 
     function selectPlaylist() {
+        if (Sortify.getState() !== State.PLAYLIST) return;
         Sortify.scrollHandler.setScrolling(false);
         $(nextIndicatorSelector).show();
         Sortify.elementHandler.selectElement($(playlistSelector));
     }
 
     function selectTrack() {
+        if (Sortify.getState() !== State.TRACKS) return;
         Sortify.scrollHandler.setScrolling(false);
         $(nextIndicatorSelector).show();
         Sortify.elementHandler.selectElement($(trackSelector));
