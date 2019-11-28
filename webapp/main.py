@@ -2,6 +2,7 @@ import urllib.request
 from base64 import b64encode
 from urllib.parse import urlencode
 from threading import Lock
+from time import time
 
 from flask import Flask, request, render_template, redirect
 from flask_socketio import SocketIO, emit
@@ -36,7 +37,8 @@ model.initialize()
 def index():
     me = session.get(SPOTIFY_USER, None)
     if me is not None:
-        return render_template('index.html', loggedIn=True, user=me)
+        login_time = session[LOGIN_TIMESTAMP]
+        return render_template('index.html', loggedIn=(time() - login_time < LOGIN_TIME), user=me)
     return render_template('index.html')
 
 
@@ -85,6 +87,7 @@ def spotify_callback():
     session[SPOTIFY_USER] = me_json
     session[PLAYLISTS_FULLY_LOADED] = False
     session[PLAYLIST_OFFSET] = 0
+    session[LOGIN_TIMESTAMP] = time()
     return redirect("/")
 
 
@@ -108,7 +111,8 @@ def retrieve_playlists(_):
     if session[PLAYLISTS_FULLY_LOADED]:
         return
     payload = {'offset': session[PLAYLIST_OFFSET]}
-    playlist_json = get('https://api.spotify.com/v1/users/' + session[SPOTIFY_USER]['id'] + '/playlists', socketio, payload)
+    playlist_json = get('https://api.spotify.com/v1/users/' + session[SPOTIFY_USER]['id'] + '/playlists', socketio,
+                        payload)
     if playlist_json is None:
         return send_error_response('Could not retrieve playlists')
 

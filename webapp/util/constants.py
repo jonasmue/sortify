@@ -9,6 +9,8 @@ STATE_KEY = 'spotify_auth_state'
 
 API_SESSION_TOKEN = 'api_session_token'
 SPOTIFY_USER = 'spotify_user'
+LOGIN_TIMESTAMP = 'login_timestamp'
+LOGIN_TIME = 3600
 
 SELECTED_PLAYLIST = 'selected_playlist'
 PLAYLIST_OFFSET = 'playlist_offset'
