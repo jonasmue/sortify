@@ -19,11 +19,11 @@ if not os.path.exists('data'):
     urllib.request.urlretrieve(MODEL_URL, os.path.join('data', 'glove_model.npz'))
 
 # Start app
-#async_mode = 'eventlet'
+async_mode = 'eventlet'
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = generate_random_string(32)
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode=async_mode)
 
 model = GloveSorter(os.path.join('data', 'glove_model.npz'), os.path.join('data', 'track_map.dms'), socketio)
 model.initialize()
@@ -236,4 +236,4 @@ def send_error_response(message=''):
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0', port=8080)
