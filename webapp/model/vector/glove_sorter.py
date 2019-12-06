@@ -19,7 +19,7 @@ class GloveSorter(Model):
         self.no_songs = len(self.track2id)
         raw_weights = np.load(self._model_path)['W']
         assert raw_weights.shape[0] == 2 * self.no_songs
-        self.weights = (raw_weights[:self.no_songs, :] + raw_weights[self.no_songs, :]) / 2
+        self.weights = (raw_weights[:self.no_songs, :] + raw_weights[self.no_songs:, :]) / 2
         self.initialized = True
 
     def sort_playlist(self, playlist, selected_track):

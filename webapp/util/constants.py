@@ -2,7 +2,7 @@ import os
 
 CLIENT_ID = os.environ['CLIENT_ID']
 CLIENT_SECRET = os.environ['CLIENT_SECRET']
-REDIRECT_URI = 'http://sortify.ddns.net/callback'
+REDIRECT_URI = 'http://localhost:5000/callback'
 SCOPE = 'playlist-read-collaborative playlist-read-private playlist-modify-private'
 
 STATE_KEY = 'spotify_auth_state'

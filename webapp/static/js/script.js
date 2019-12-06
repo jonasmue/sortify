@@ -363,7 +363,7 @@ Sortify.audioHandler = (function () {
     }
 }());
 
-Sortify.successHandler = (function () {
+Sortify.infoHandler = (function () {
     'use strict';
 
     const wrapperSelector = '.success-wrapper';
@@ -376,10 +376,43 @@ Sortify.successHandler = (function () {
         Sortify.animationHandler.showConfetti(wrapperSelector);
     }
 
+    function showMoreInfoContent($element, isOpen) {
+        if (!isOpen) {
+            $element.siblings('.more-info-content').slideDown('fast');
+        } else {
+            $element.siblings('.more-info-content').slideUp('fast');
+        }
+    }
+
+    function rotateInfoHandle($infoHandle, isOpen) {
+        const rotate = isOpen ? 'rotate(45deg)' : 'rotate(-135deg)';
+        $infoHandle.css('transform', rotate)
+    }
+
+    function toggleInfoHandleClass($infoHandle) {
+        const isOpen = $infoHandle.hasClass('open');
+        if (isOpen) $infoHandle.removeClass('open');
+        else $infoHandle.addClass('open');
+        return isOpen
+    }
+
     function registerEvents(socket) {
         $('.sort-more').on('click', function () {
             $(wrapperSelector).hide('fast');
             Sortify.listHandler.resetPlaylists(socket);
+        });
+
+        $('.more-info-handle').on('click', function () {
+            const isOpen = toggleInfoHandleClass($(this));
+            showMoreInfoContent($(this), isOpen);
+            rotateInfoHandle($(this).siblings('.more-handle-indicator'), isOpen);
+
+        });
+
+        $('.more-handle-indicator').on('click', function () {
+            const isOpen = toggleInfoHandleClass($(this).siblings('.more-info-handle'));
+            showMoreInfoContent($(this), isOpen);
+            rotateInfoHandle($(this), isOpen);
         });
     }
 
@@ -611,7 +644,7 @@ Sortify.socketHandler = (function () {
 
         socket.on('sortedPlaylist', function (playlist) {
             Sortify.loaderHandler.hideLoader();
-            Sortify.successHandler.showSuccess(playlist);
+            Sortify.infoHandler.showSuccess(playlist);
         });
 
         socket.on('error', function (message) {
@@ -636,7 +669,7 @@ $(document).ready(function () {
     Sortify.listHandler.registerEvents(socket);
     Sortify.audioHandler.registerEvents();
     Sortify.keyEventHandler.registerEvents(socket);
-    Sortify.successHandler.registerEvents(socket);
+    Sortify.infoHandler.registerEvents(socket);
 });
 
 /************************************
