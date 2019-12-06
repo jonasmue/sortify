@@ -358,7 +358,7 @@ a:focus, a:hover {
 }
 
 .button-wrapper {
-    position: fixed;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
 }
