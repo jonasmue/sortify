@@ -3,7 +3,7 @@
 This repository holds the code of the Sortify Webapp.
 Due to server capacity limitations, Sortify is not online at the moment.
 
-## Installation Instructions
+## Installation Instructions (macOS, Linux)
 
 ### Step 1: Create Spotify Developer App
 1. Register at https://developer.spotify.com
