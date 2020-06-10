@@ -21,6 +21,7 @@ Due to server capacity limitations, Sortify is not online at the moment.
 ### Step 3: Assign Environment Variables
 1. `export CLIENT_ID={YOUR CLIENT ID}`
 2. `export CLIENT_SECRET={YOUR CLIENT SECRET}`
+To persist environment variables follow this guide: https://pybit.es/persistent-environment-variables.html
 
 ### Step 4: Start Sortify
 1. `python main.py` – On the first start, the GloVe model will be downloaded which might take a while depending on your internet connection
