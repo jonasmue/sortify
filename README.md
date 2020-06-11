@@ -1,6 +1,7 @@
 # Sortify
 
-This repository holds the code of the Sortify Webapp.
+This repository holds the code of the Sortify Webapp. To get to know more about Sortify, please read this article: https://jonasportfol.io/posts/sortify
+
 Due to server capacity limitations, Sortify is not online at the moment.
 
 ## Installation Instructions (macOS, Linux)
@@ -27,7 +28,3 @@ To persist environment variables follow this guide: https://pybit.es/persistent-
 1. `python main.py` – On the first start, the GloVe model will be downloaded which might take a while depending on your internet connection
 2. In your browser navigate to http://localhost:8000 and start sorting your playlists!
 
-## Further Reading
-
-A description of the method is given here:
-https://jonasportfol.io/posts/sortify 
