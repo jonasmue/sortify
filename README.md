@@ -12,7 +12,7 @@ Due to server capacity limitations, Sortify is not online at the moment.
 
 ### Step 2: Clone Repository and Setup Virtual Environment
 1. `git clone git@github.com:jonasmue/sortify.git`
-2. `cd webapp`
+2. `cd sortify/webapp`
 3. `pip3 install virtualenv`
 4. `virtualenv venv`
 5. `source venv/bin/activate`
