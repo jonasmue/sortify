@@ -1,6 +1,6 @@
 # Sortify
 
-This repository holds the code of the Sortify Webapp. To get to know more about Sortify, please read this article: https://jonasportfol.io/posts/sortify
+This repository holds the code of the Sortify Webapp. To learn more about Sortify, please read this article: https://jonasportfol.io/posts/sortify
 
 Due to server capacity limitations, Sortify is not online at the moment.
 
