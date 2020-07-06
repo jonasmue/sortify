@@ -21,7 +21,7 @@ Due to server capacity limitations, Sortify is not online at the moment.
 
 ### Step 3: Assign Environment Variables
 1. `export CLIENT_ID={YOUR CLIENT ID}`, for example `export CLIENT_ID=aajfjal3lkalkj`
-2. `export CLIENT_SECRET={YOUR CLIENT SECRET}`, for example `export CLIENT_ID=cckljkljsdkckklsdj3l2`
+2. `export CLIENT_SECRET={YOUR CLIENT SECRET}`, for example `export CLIENT_SECRET=cckljkljsdkckklsdj3l2`
 
 To persist environment variables follow this guide: https://pybit.es/persistent-environment-variables.html
 
